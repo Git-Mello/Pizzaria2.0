@@ -12,6 +12,11 @@ public enum TipoForma {
             return new Circulo(raio);
         }
 
+        @Override
+        public double getDimensaoMinima() {
+            return Circulo.MINIMO;
+        }
+
         /** Raio a partir da área: raiz(área / PI). */
         @Override
         public double calcularDimensao(double area) {
@@ -22,6 +27,11 @@ public enum TipoForma {
         @Override
         public Forma criar(double lado) {
             return new Quadrado(lado);
+        }
+
+        @Override
+        public double getDimensaoMinima() {
+            return Quadrado.MINIMO;
         }
 
         /** Lado a partir da área: raiz(área). */
@@ -36,6 +46,11 @@ public enum TipoForma {
             return new Triangulo(lado);
         }
 
+        @Override
+        public double getDimensaoMinima() {
+            return Triangulo.MINIMO;
+        }
+
         /** Lado do triângulo equilátero a partir da área: raiz(4 x área / raiz(3)). */
         @Override
         public double calcularDimensao(double area) {
@@ -47,6 +62,16 @@ public enum TipoForma {
 
     TipoForma(String nome) {
         this.nome = nome;
+    }
+
+    /** Menor dimensão aceita pela forma (vem da constante da subclasse). */
+    public abstract double getDimensaoMinima();
+
+    /** Texto com os limites, para mostrar na tela. Ex.: "raio de 7 a 23 cm". */
+    public String getDescricaoLimites() {
+        Forma exemplo = criar(getDimensaoMinima());
+        return String.format("%s de %.0f a %.0f cm", exemplo.getNomeDimensao(),
+                exemplo.getDimensaoMinima(), exemplo.getDimensaoMaxima());
     }
 
     /** Cria a forma com a dimensão (raio ou lado) informada. Os limites são validados pela própria forma. */

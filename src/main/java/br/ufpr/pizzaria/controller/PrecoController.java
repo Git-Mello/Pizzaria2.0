@@ -1,0 +1,52 @@
+package br.ufpr.pizzaria.controller;
+
+import java.util.Map;
+
+import br.ufpr.pizzaria.model.TipoPizza;
+import br.ufpr.pizzaria.model.dao.DaoFactory;
+import br.ufpr.pizzaria.model.dao.TipoPizzaDao;
+import br.ufpr.pizzaria.view.TelaPrecos;
+import br.ufpr.pizzaria.view.TelaPrincipal;
+
+/** Controller da atualização do preço do cm² de cada tipo de pizza (enunciado, item 3). */
+public class PrecoController {
+
+    private final TelaPrincipal principal;
+    private final TipoPizzaDao dao = DaoFactory.getTipoPizzaDao();
+
+    public PrecoController(TelaPrincipal principal) {
+        this.principal = principal;
+        principal.getBotaoPrecos().addActionListener(e -> abrirTela());
+    }
+
+    private void abrirTela() {
+        TelaPrecos view = new TelaPrecos(principal);
+        try {
+            view.setTipos(dao.getAll());
+        } catch (Exception e) {
+            principal.mostrarErro(TratadorErros.mensagem(e));
+            view.dispose();
+            return;
+        }
+        view.getBotaoSalvar().addActionListener(e -> salvar(view));
+        view.setVisible(true);
+    }
+
+    /** Valida todos os preços antes de gravar qualquer um. */
+    private void salvar(TelaPrecos view) {
+        try {
+            Map<TipoPizza, String> digitados = view.getPrecosDigitados();
+            for (Map.Entry<TipoPizza, String> item : digitados.entrySet()) {
+                double preco = Entrada.lerNumero(item.getValue(), "preço da pizza " + item.getKey().getNome());
+                item.getKey().setPrecoCm2(preco);   // valida: maior que zero
+            }
+            for (TipoPizza tipo : digitados.keySet()) {
+                dao.update(tipo);
+            }
+            view.mostrarMensagem("Preços atualizados. Valem para as próximas pizzas montadas.");
+            view.dispose();
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e));
+        }
+    }
+}

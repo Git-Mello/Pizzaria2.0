@@ -1,0 +1,140 @@
+package br.ufpr.pizzaria.controller;
+
+import br.ufpr.pizzaria.model.Cliente;
+import br.ufpr.pizzaria.model.dao.ClienteDao;
+import br.ufpr.pizzaria.model.dao.DaoFactory;
+import br.ufpr.pizzaria.model.dao.PedidoDao;
+import br.ufpr.pizzaria.view.ClienteTableModel;
+import br.ufpr.pizzaria.view.TelaClientes;
+import br.ufpr.pizzaria.view.TelaPrincipal;
+
+/**
+ * Controller dos clientes (enunciado, item 1). Como no exemplo Contato MVC:
+ * guarda a view, o model (TableModel) e o dao, e registra as ações nos botões da tela.
+ */
+public class ClienteController {
+
+    private static final String TELEFONE_REPETIDO = "Já existe um cliente cadastrado com este telefone.";
+
+    private final TelaPrincipal principal;
+    private final ClienteTableModel model = new ClienteTableModel();
+    private final ClienteDao dao = DaoFactory.getClienteDao();
+    private final PedidoDao pedidoDao = DaoFactory.getPedidoDao();
+    private TelaClientes view;
+
+    public ClienteController(TelaPrincipal principal) {
+        this.principal = principal;
+        principal.getBotaoClientes().addActionListener(e -> abrirTela());
+    }
+
+    private void abrirTela() {
+        try {
+            model.setClientes(dao.getAll());
+        } catch (Exception e) {
+            principal.mostrarErro(TratadorErros.mensagem(e));
+            return;
+        }
+        view = new TelaClientes(principal, model);
+        view.getBotaoIncluir().addActionListener(e -> incluir());
+        view.getBotaoAtualizar().addActionListener(e -> atualizar());
+        view.getBotaoExcluir().addActionListener(e -> excluir());
+        view.getBotaoLimpar().addActionListener(e -> view.limparCampos());
+        view.getBotaoFiltrar().addActionListener(e -> filtrar());
+        view.getBotaoMostrarTodos().addActionListener(e -> mostrarTodos());
+        // Ao clicar num cliente da lista, os dados vão para os campos
+        view.getTabela().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
+                view.preencherCampos(model.getCliente(view.getLinhaSelecionada()));
+            }
+        });
+        view.setVisible(true);
+    }
+
+    private void incluir() {
+        try {
+            Cliente cliente = new Cliente(view.getNome(), view.getSobrenome(), view.getTelefone());
+            dao.add(cliente);
+            recarregar();
+            view.limparCampos();
+            view.mostrarMensagem("Cliente " + cliente.getNome() + " incluído (código " + cliente.getId() + ").");
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e, TELEFONE_REPETIDO));
+        }
+    }
+
+    private void atualizar() {
+        Cliente cliente = clienteSelecionado();
+        if (cliente == null) {
+            return;
+        }
+        try {
+            cliente.setNome(view.getNome());
+            cliente.setSobrenome(view.getSobrenome());
+            cliente.setTelefone(view.getTelefone());
+            dao.update(cliente);
+            view.mostrarMensagem("Cliente atualizado.");
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e, TELEFONE_REPETIDO));
+        }
+        recarregar();   // em caso de erro, desfaz o que foi alterado só na memória
+    }
+
+    /** Exclui o cliente e os pedidos dele (enunciado, item 1.c), após confirmação. */
+    private void excluir() {
+        Cliente cliente = clienteSelecionado();
+        if (cliente == null) {
+            return;
+        }
+        try {
+            int pedidos = pedidoDao.getByCliente(cliente).size();
+            String pergunta = "Excluir o cliente " + cliente.getNome() + " " + cliente.getSobrenome() + "?";
+            if (pedidos > 0) {
+                pergunta += "\nOs " + pedidos + " pedido(s) dele também serão excluídos.";
+            }
+            if (!view.confirmar(pergunta)) {
+                return;
+            }
+            dao.delete(cliente);
+            recarregar();
+            view.limparCampos();
+            view.mostrarMensagem("Cliente excluído.");
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e));
+        }
+    }
+
+    /** Filtro por sobrenome (ou parte) e/ou telefone (enunciado, item 1.d). */
+    private void filtrar() {
+        try {
+            model.setClientes(dao.getByFiltro(view.getFiltroSobrenome(), view.getFiltroTelefone()));
+            if (model.getRowCount() == 0) {
+                view.mostrarMensagem("Nenhum cliente encontrado com esse filtro.");
+            }
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e));
+        }
+    }
+
+    private void mostrarTodos() {
+        view.limparFiltro();
+        recarregar();
+    }
+
+    /** Recarrega a lista mantendo o filtro que estiver digitado. */
+    private void recarregar() {
+        try {
+            model.setClientes(dao.getByFiltro(view.getFiltroSobrenome(), view.getFiltroTelefone()));
+        } catch (Exception e) {
+            view.mostrarErro(TratadorErros.mensagem(e));
+        }
+    }
+
+    private Cliente clienteSelecionado() {
+        int linha = view.getLinhaSelecionada();
+        if (linha < 0) {
+            view.mostrarErro("Selecione um cliente na lista.");
+            return null;
+        }
+        return model.getCliente(linha);
+    }
+}
