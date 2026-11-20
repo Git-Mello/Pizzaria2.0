@@ -59,6 +59,12 @@ public class TelaControlePedidos extends TelaBase {
         return linha < 0 ? -1 : tabela.convertRowIndexToModel(linha);
     }
 
+    /** Seleciona a linha do modelo informada (considerando a ordenação da tabela). */
+    public void selecionarLinha(int linhaModelo) {
+        int linha = tabela.convertRowIndexToView(linhaModelo);
+        tabela.setRowSelectionInterval(linha, linha);
+    }
+
     public JTable getTabela() {
         return tabela;
     }

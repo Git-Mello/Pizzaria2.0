@@ -62,6 +62,12 @@ public class ControlePedidosController {
             view.mostrarErro(TratadorErros.mensagem(e));
         }
         recarregar();
+        // Mantém o mesmo pedido selecionado depois de recarregar a lista
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getPedido(i).getId() == pedido.getId()) {
+                view.selecionarLinha(i);
+            }
+        }
     }
 
     private void recarregar() {
