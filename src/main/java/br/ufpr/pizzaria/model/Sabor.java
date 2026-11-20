@@ -1,32 +1,67 @@
 package br.ufpr.pizzaria.model;
 
-// Define a classe Sabor.
+/** Sabor de pizza (tabela sabor), relacionado a um tipo (Simples, Especial ou Premium). */
 public class Sabor {
-    // Atributo privado que armazena o nome do sabor.
-    private String nome;
-    // Atributo privado que armazena o tipo do sabor (Simples, Especial, Premium).
-    private String tipo;
 
-    // Construtor da classe Sabor que inicializa os atributos.
-    public Sabor(String nome, String tipo) {
-        // Inicializa o nome do sabor.
-        this.nome = nome;
-        // Inicializa o tipo do sabor.
-        this.tipo = tipo;
+    private long id;
+    private String nome;
+    private TipoPizza tipo;
+
+    public Sabor(String nome, TipoPizza tipo) {
+        setNome(nome);
+        setTipo(tipo);
     }
 
-    // Método público que retorna o nome do sabor.
+    public Sabor(long id, String nome, TipoPizza tipo) {
+        this(nome, tipo);
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getNome() {
         return nome;
     }
 
-    // Método público que retorna o tipo do sabor.
-    public String getTipo() {
+    public void setNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome do sabor é obrigatório.");
+        }
+        if (nome.trim().length() > 45) {
+            throw new IllegalArgumentException("O nome do sabor pode ter no máximo 45 caracteres.");
+        }
+        this.nome = nome.trim();
+    }
+
+    public TipoPizza getTipo() {
         return tipo;
     }
-    
+
+    public void setTipo(TipoPizza tipo) {
+        if (tipo == null) {
+            throw new IllegalArgumentException("Escolha o tipo do sabor (Simples, Especial ou Premium).");
+        }
+        this.tipo = tipo;
+    }
+
     @Override
     public String toString() {
-        return nome;
+        return nome + " (" + tipo.getNome() + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Sabor && ((Sabor) obj).id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }

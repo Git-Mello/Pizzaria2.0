@@ -1,47 +1,57 @@
 package br.ufpr.pizzaria.model;
 
-// Define uma classe abstrata chamada Forma.
+/**
+ * Classe abstrata (base da herança) para as formas da pizza.
+ * Cada subclasse (Circulo, Quadrado, Triangulo) define a sua fórmula de área
+ * e os seus limites: o cálculo é polimórfico — quem usa a forma só chama calcularArea().
+ */
 public abstract class Forma {
-    private double[] medida;
 
-    // Construtor parametrizado que inicia array de medidas
-    public Forma(int numMedidas) {
-        medida = new double[numMedidas];
+    // Área mínima e máxima aceitas quando o usuário informa a pizza pela área (cm²)
+    public static final double AREA_MINIMA = 100;
+    public static final double AREA_MAXIMA = 1600;
+
+    // Raio (círculo) ou lado (quadrado e triângulo), em cm
+    private double dimensao;
+
+    protected Forma(double dimensao) {
+        setDimensao(dimensao);
     }
 
-    // Obtém uma medida da forma pelo índice
-    public double getMedida(int i) {
-        if (i >= 0 && i < medida.length) {
-            return medida[i];
-        } else {
-            return -1;
+    public double getDimensao() {
+        return dimensao;
+    }
+
+    /** Valida a dimensão conforme os limites da forma (enunciado, item 2.c.ii). */
+    public final void setDimensao(double dimensao) {
+        if (dimensao < getDimensaoMinima() || dimensao > getDimensaoMaxima()) {
+            throw new IllegalArgumentException(String.format(
+                    "O %s do %s deve ter entre %.0f e %.0f cm (informado: %.2f cm).",
+                    getNomeDimensao(), getNome().toLowerCase(), getDimensaoMinima(), getDimensaoMaxima(), dimensao));
         }
+        this.dimensao = dimensao;
     }
 
-    // Define uma medida da forma pelo índice
-    protected void setMedida(int i, double m) {
-        if (i >= 0 && i < medida.length && m >= 0) {
-            medida[i] = m;
-        }
-    }
+    // ---------- Métodos que cada forma implementa do seu jeito (polimorfismo) ----------
 
-    // Devolve uma string que representa a forma
+    /** Área da forma em cm². */
+    public abstract double calcularArea();
+
+    /** Nome da forma para exibição: "Círculo", "Quadrado" ou "Triângulo". */
+    public abstract String getNome();
+
+    /** Nome da dimensão: "raio" ou "lado". */
+    public abstract String getNomeDimensao();
+
+    public abstract double getDimensaoMinima();
+
+    public abstract double getDimensaoMaxima();
+
+    /** Tipo da forma, usado para gravar no banco (coluna pizza.forma). */
+    public abstract TipoForma getTipo();
+
     @Override
     public String toString() {
-        String formaS = getClass().getSimpleName();
-        formaS = formaS + "[medidas:";
-        for (int i = 0; i < medida.length - 1; i++) {
-            formaS = formaS + medida[i] + ",";
-        }
-        formaS = formaS + medida[medida.length - 1] + "]";
-        return formaS;
+        return String.format("%s (%s %.2f cm)", getNome(), getNomeDimensao(), dimensao);
     }
-
-    // Retorna número de medidas da Forma
-    public int getNumMedidas() {
-        return medida.length;
-    }
-
-    // Método abstrato que determinará a área
-    public abstract double calcularArea();
 }
