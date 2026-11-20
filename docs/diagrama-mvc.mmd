@@ -1,0 +1,52 @@
+classDiagram
+    direction TB
+    class Pizzaria {
+        +main(String[] args)$
+    }
+    class TelaPrincipal {
+        +getBotaoClientes() JButton
+        +getBotaoPedido() JButton
+        +getBotaoControlePedidos() JButton
+        +getBotaoSabores() JButton
+        +getBotaoPrecos() JButton
+    }
+    class ClienteController {
+        -TelaClientes view
+        -ClienteTableModel model
+        -ClienteDao dao
+    }
+    class PedidoController {
+        -TelaPedido view
+        -PizzaTableModel model
+        -PedidoDao dao
+        -Pedido pedidoAtual
+    }
+    class ControlePedidosController {
+        -TelaControlePedidos view
+        -PedidoTableModel model
+        -PedidoDao dao
+    }
+    class SaborController {
+        -TelaSabores view
+        -SaborTableModel model
+        -SaborDao dao
+    }
+    class PrecoController {
+        -TipoPizzaDao dao
+    }
+    Pizzaria ..> TelaPrincipal : cria
+    Pizzaria ..> ClienteController : cria
+    Pizzaria ..> PedidoController : cria
+    Pizzaria ..> ControlePedidosController : cria
+    Pizzaria ..> SaborController : cria
+    Pizzaria ..> PrecoController : cria
+    ClienteController --> TelaClientes : view
+    ClienteController --> ClienteTableModel : model
+    PedidoController --> TelaPedido : view
+    PedidoController --> PizzaTableModel : model
+    ControlePedidosController --> TelaControlePedidos : view
+    ControlePedidosController --> PedidoTableModel : model
+    SaborController --> TelaSabores : view
+    SaborController --> SaborTableModel : model
+    PrecoController --> TelaPrecos : view
+    note "Telas herdam de TelaBase (JDialog). TableModels herdam de AbstractTableModel. Cada Controller registra as ações nos botões da TelaPrincipal e da sua tela."

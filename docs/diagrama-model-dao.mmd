@@ -1,0 +1,144 @@
+classDiagram
+    direction TB
+
+    namespace model {
+        class Forma {
+            <<abstract>>
+            -double dimensao
+            +calcularArea()* double
+            +getNome()* String
+            +getNomeDimensao()* String
+            +getDimensaoMinima()* double
+            +getDimensaoMaxima()* double
+            +getTipo()* TipoForma
+        }
+        class Circulo {
+            +calcularArea() double
+        }
+        class Quadrado {
+            +calcularArea() double
+        }
+        class Triangulo {
+            +calcularArea() double
+        }
+        class TipoForma {
+            <<enumeration>>
+            CIRCULO
+            QUADRADO
+            TRIANGULO
+            +criar(double dimensao) Forma
+            +criarPorArea(double area) Forma
+            +calcularDimensao(double area) double
+        }
+        class Pizza {
+            -long id
+            -double preco
+            +calcularPreco() double
+            +getArea() double
+        }
+        class Sabor {
+            -long id
+            -String nome
+        }
+        class TipoPizza {
+            -long id
+            -String nome
+            -double precoCm2
+        }
+        class Pedido {
+            -long id
+            +adicionarPizza(Pizza)
+            +removerPizza(int)
+            +getPrecoTotal() double
+            +podeSerAlterado() boolean
+        }
+        class EstadoPedido {
+            <<enumeration>>
+            ABERTO
+            A_CAMINHO
+            ENTREGUE
+        }
+        class Cliente {
+            -long id
+            -String nome
+            -String sobrenome
+            -String telefone
+        }
+    }
+
+    namespace dao {
+        class ConnectionFactory {
+            -Properties properties
+            +getConnection()$ Connection
+        }
+        class DaoFactory {
+            +getClienteDao()$ ClienteDao
+            +getSaborDao()$ SaborDao
+            +getTipoPizzaDao()$ TipoPizzaDao
+            +getPedidoDao()$ PedidoDao
+        }
+        class ClienteDao {
+            <<interface>>
+            +add(Cliente)
+            +getAll() List~Cliente~
+            +getByFiltro(String sobrenome, String telefone) List~Cliente~
+            +update(Cliente)
+            +delete(Cliente)
+        }
+        class SaborDao {
+            <<interface>>
+            +add(Sabor)
+            +getAll() List~Sabor~
+            +update(Sabor)
+            +delete(Sabor)
+            +isEmUso(Sabor) boolean
+        }
+        class TipoPizzaDao {
+            <<interface>>
+            +getAll() List~TipoPizza~
+            +update(TipoPizza)
+        }
+        class PedidoDao {
+            <<interface>>
+            +add(Pedido)
+            +getAll() List~Pedido~
+            +getByCliente(Cliente) List~Pedido~
+            +update(Pedido)
+            +updateEstado(Pedido)
+        }
+        class ClienteDaoSql {
+            <<Singleton>>
+        }
+        class SaborDaoSql {
+            <<Singleton>>
+        }
+        class TipoPizzaDaoSql {
+            <<Singleton>>
+        }
+        class PedidoDaoSql {
+            <<Singleton>>
+        }
+    }
+
+    Forma <|-- Circulo
+    Forma <|-- Quadrado
+    Forma <|-- Triangulo
+    TipoForma ..> Forma : cria
+    Pizza --> "1" Forma
+    Pizza --> "1..2" Sabor
+    Sabor --> "1" TipoPizza
+    Pedido --> "1" Cliente
+    Pedido *-- "1..*" Pizza
+    Pedido --> "1" EstadoPedido
+
+    ClienteDao <|.. ClienteDaoSql
+    SaborDao <|.. SaborDaoSql
+    TipoPizzaDao <|.. TipoPizzaDaoSql
+    PedidoDao <|.. PedidoDaoSql
+    DaoFactory ..> ClienteDaoSql
+    DaoFactory ..> SaborDaoSql
+    DaoFactory ..> TipoPizzaDaoSql
+    DaoFactory ..> PedidoDaoSql
+    ClienteDaoSql ..> ConnectionFactory
+    PedidoDaoSql ..> ConnectionFactory
+
