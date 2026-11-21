@@ -6,6 +6,10 @@ package br.ufpr.pizzaria.model;
  */
 public class TipoPizza {
 
+    // Limites do preço do cm² (R$). O mínimo é a menor fração que o banco guarda (4 casas).
+    public static final double PRECO_MINIMO = 0.0001;
+    public static final double PRECO_MAXIMO = 10;
+
     private long id;
     private String nome;
     private double precoCm2;
@@ -28,11 +32,19 @@ public class TipoPizza {
         return precoCm2;
     }
 
+    /**
+     * O banco guarda o preço com 4 casas decimais (DECIMAL(10,4)); por isso o valor é arredondado
+     * para 4 casas antes de validar. Assim, um valor como 0,00001 (que viraria 0,0000 no banco)
+     * é recusado aqui, com mensagem, em vez de gravar zero.
+     */
     public void setPrecoCm2(double precoCm2) {
-        if (precoCm2 <= 0) {
-            throw new IllegalArgumentException("O preço do cm² da pizza " + nome + " deve ser maior que zero.");
+        double arredondado = Math.round(precoCm2 * 10000) / 10000.0;
+        if (Double.isNaN(precoCm2) || arredondado < PRECO_MINIMO || arredondado > PRECO_MAXIMO) {
+            throw new IllegalArgumentException(String.format(
+                    "O preço do cm² da pizza %s deve ficar entre %.4f e %.4f (até 4 casas decimais).",
+                    nome, PRECO_MINIMO, PRECO_MAXIMO));
         }
-        this.precoCm2 = precoCm2;
+        this.precoCm2 = arredondado;
     }
 
     @Override

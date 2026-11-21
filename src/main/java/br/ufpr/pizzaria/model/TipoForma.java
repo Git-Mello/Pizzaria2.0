@@ -82,15 +82,32 @@ public enum TipoForma {
 
     /**
      * Cria a forma a partir da área em cm² (enunciado, item 2.c.iv):
-     * valida a área (100 a 1600 cm²), calcula a dimensão e cria a forma (que valida os seus limites).
+     * valida a área (100 a 1600 cm²), calcula a dimensão e cria a forma.
+     * Como cada forma tem limites de raio/lado, nem toda área de 100 a 1600 serve para todas:
+     * ex.: 100 cm² num círculo dá raio 5,64 (mínimo 7). Nesse caso a mensagem diz
+     * qual é a faixa de área válida para aquela forma.
      */
     public Forma criarPorArea(double area) {
-        if (area < Forma.AREA_MINIMA || area > Forma.AREA_MAXIMA) {
+        if (Double.isNaN(area) || area < Forma.AREA_MINIMA || area > Forma.AREA_MAXIMA) {
             throw new IllegalArgumentException(String.format(
-                    "A área deve ficar entre %.0f e %.0f cm² (informado: %.2f cm²).",
-                    Forma.AREA_MINIMA, Forma.AREA_MAXIMA, area));
+                    "A área deve ficar entre %.0f e %.0f cm².", Forma.AREA_MINIMA, Forma.AREA_MAXIMA));
         }
-        return criar(calcularDimensao(area));
+        double dimensao = calcularDimensao(area);
+        Forma menor = criar(getDimensaoMinima());   // a forma no menor tamanho permitido
+        if (dimensao < menor.getDimensaoMinima() || dimensao > menor.getDimensaoMaxima()) {
+            // Faixa de área desta forma: área da menor e da maior forma (polimorfismo: calcularArea),
+            // limitada a 100..1600. Arredonda "para dentro" (2 casas) para a mensagem não prometer
+            // um valor que seria recusado.
+            Forma maior = criar(menor.getDimensaoMaxima());
+            double areaMinima = Math.max(Forma.AREA_MINIMA, menor.calcularArea());
+            double areaMaxima = Math.min(Forma.AREA_MAXIMA, maior.calcularArea());
+            throw new IllegalArgumentException(String.format(
+                    "Para o %s, a área deve ficar entre %.2f e %.2f cm² (%s de %.0f a %.0f cm).",
+                    menor.getNome().toLowerCase(), Math.ceil(areaMinima * 100) / 100,
+                    Math.floor(areaMaxima * 100) / 100, menor.getNomeDimensao(),
+                    menor.getDimensaoMinima(), menor.getDimensaoMaxima()));
+        }
+        return criar(dimensao);
     }
 
     @Override

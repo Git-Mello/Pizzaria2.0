@@ -128,4 +128,34 @@ public class ModelTest {
         assertThrows(IllegalArgumentException.class, () -> simples.setPrecoCm2(0));
         assertThrows(IllegalArgumentException.class, () -> simples.setPrecoCm2(-1));
     }
+
+    @Test
+    public void precoDoTipoTemLimitesEQuatroCasas() {
+        // 0,00001 viraria 0,0000 no banco (DECIMAL(10,4)): é recusado
+        assertThrows(IllegalArgumentException.class, () -> simples.setPrecoCm2(0.00001));
+        assertThrows(IllegalArgumentException.class, () -> simples.setPrecoCm2(10.01));
+        assertThrows(IllegalArgumentException.class, () -> simples.setPrecoCm2(Double.NaN));
+        simples.setPrecoCm2(0.00026);   // arredonda para 4 casas
+        assertEquals(0.0003, simples.getPrecoCm2(), 0.0000001);
+        simples.setPrecoCm2(10);        // o próprio limite é aceito
+    }
+
+    @Test
+    public void dimensaoNaNEhRecusada() {
+        assertThrows(IllegalArgumentException.class, () -> new Circulo(Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> TipoForma.QUADRADO.criarPorArea(Double.NaN));
+    }
+
+    @Test
+    public void areaForaDosLimitesDaFormaInformaAFaixaValida() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> TipoForma.CIRCULO.criarPorArea(100));
+        assertTrue(e.getMessage().startsWith("Para o círculo, a área deve ficar entre"));
+        // Os extremos da faixa informada são aceitos (triângulo: 173,21 a 1558,84 cm²)
+        TipoForma.TRIANGULO.criarPorArea(173.21);
+        TipoForma.TRIANGULO.criarPorArea(1558.84);
+        assertThrows(IllegalArgumentException.class, () -> TipoForma.TRIANGULO.criarPorArea(1558.85));
+        TipoForma.CIRCULO.criarPorArea(153.94);
+        TipoForma.CIRCULO.criarPorArea(1600);
+    }
 }

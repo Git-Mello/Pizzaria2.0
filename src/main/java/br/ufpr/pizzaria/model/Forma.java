@@ -24,10 +24,11 @@ public abstract class Forma {
 
     /** Valida a dimensão conforme os limites da forma (enunciado, item 2.c.ii). */
     public final void setDimensao(double dimensao) {
-        if (dimensao < getDimensaoMinima() || dimensao > getDimensaoMaxima()) {
+        // Double.isNaN: "NaN" (não é número) não é barrado pelos testes de < e >
+        if (Double.isNaN(dimensao) || dimensao < getDimensaoMinima() || dimensao > getDimensaoMaxima()) {
             throw new IllegalArgumentException(String.format(
-                    "O %s do %s deve ter entre %.0f e %.0f cm (informado: %.2f cm).",
-                    getNomeDimensao(), getNome().toLowerCase(), getDimensaoMinima(), getDimensaoMaxima(), dimensao));
+                    "O %s do %s deve ter entre %.0f e %.0f cm.",
+                    getNomeDimensao(), getNome().toLowerCase(), getDimensaoMinima(), getDimensaoMaxima()));
         }
         this.dimensao = dimensao;
     }
