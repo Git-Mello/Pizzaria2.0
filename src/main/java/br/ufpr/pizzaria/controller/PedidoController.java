@@ -174,7 +174,22 @@ public class PedidoController {
             pedidoAtual = new Pedido(view.getClienteSelecionado());
             view.setPodeEditar(true, "Novo pedido: monte as pizzas e clique em Salvar pedido.");
         } else {
-            pedidoAtual = escolhido;
+            // Relê o pedido do banco: assim, alterações descartadas (pizzas adicionadas e não salvas)
+            // não continuam no objeto que está na lista "Pedido".
+            try {
+                pedidoAtual = dao.getById(escolhido.getId());
+            } catch (Exception e) {
+                pedidoAtual = null;
+                view.setPodeEditar(false, "Não foi possível abrir o pedido " + escolhido.getId() + ".");
+                atualizarPizzas();
+                view.mostrarErro(TratadorErros.mensagem(e));
+                return;
+            }
+            if (pedidoAtual == null) {
+                view.setPodeEditar(false, "O pedido " + escolhido.getId() + " não existe mais.");
+                atualizarPizzas();
+                return;
+            }
             if (pedidoAtual.podeSerAlterado()) {
                 view.setPodeEditar(true, "Pedido " + pedidoAtual.getId() + " aberto: pode ser alterado.");
             } else {

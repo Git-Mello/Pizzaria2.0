@@ -69,6 +69,7 @@ public class PedidoDaoSql implements PedidoDao {
                 con.commit();
             } catch (SQLException ex) {
                 con.rollback();
+                pedido.setId(0);   // o pedido não foi gravado: continua sendo um pedido novo
                 throw ex;
             }
         }
