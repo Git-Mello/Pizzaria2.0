@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -67,10 +68,19 @@ public class DaoTest {
 
     private static boolean bancoDisponivel() {
         try (Connection con = ConnectionFactory.getConnection()) {
-            return con.isValid(2);
+            return true;   // conseguiu conectar
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /** Monta a lista de sabores de uma pizza. */
+    private static List<Sabor> sabores(Sabor... lista) {
+        List<Sabor> resultado = new ArrayList<>();
+        for (Sabor sabor : lista) {
+            resultado.add(sabor);
+        }
+        return resultado;
     }
 
     // ---------- Cliente ----------
@@ -98,8 +108,13 @@ public class DaoTest {
     }
 
     @Test
-    public void telefoneRepetidoEhRecusadoPeloBanco() {
-        assertThrows(SQLException.class, () -> clienteDao.add(new Cliente("Dup", "Junit", "00000000001")));
+    public void telefoneRepetidoEhRecusadoPeloBanco() throws Exception {
+        try {
+            clienteDao.add(new Cliente("Dup", "Junit", "00000000001"));
+            fail("O banco deveria recusar o telefone repetido");
+        } catch (SQLException e) {
+            // esperado: chave única (uk_cliente_telefone)
+        }
     }
 
     // ---------- Tipo e Sabor ----------
@@ -134,7 +149,7 @@ public class DaoTest {
         assertNotNull(saborDao.getById(saborTeste.getId()));
         assertFalse(saborDao.isEmUso(saborTeste));
         Pedido pedido = new Pedido(cliente);
-        pedido.adicionarPizza(new Pizza(new Quadrado(20), List.of(saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(saborTeste)));
         pedidoDao.add(pedido);
         assertTrue(saborDao.isEmUso(saborTeste));
     }
@@ -145,8 +160,8 @@ public class DaoTest {
     public void pedidoGravadoComPizzasESaboresELidoDeVolta() throws Exception {
         List<Sabor> sabores = saborDao.getAll();
         Pedido pedido = new Pedido(cliente);
-        pedido.adicionarPizza(new Pizza(new Quadrado(30), List.of(sabores.get(0), saborTeste)));
-        pedido.adicionarPizza(new Pizza(new Circulo(10), List.of(saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Quadrado(30), sabores(sabores.get(0), saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Circulo(10), sabores(saborTeste)));
         pedidoDao.add(pedido);
 
         Pedido lido = pedidoDao.getById(pedido.getId());
@@ -160,10 +175,10 @@ public class DaoTest {
     @Test
     public void pedidoAlteradoEEstadoAtualizado() throws Exception {
         Pedido pedido = new Pedido(cliente);
-        pedido.adicionarPizza(new Pizza(new Quadrado(20), List.of(saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(saborTeste)));
         pedidoDao.add(pedido);
 
-        pedido.adicionarPizza(new Pizza(new Circulo(15), List.of(saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Circulo(15), sabores(saborTeste)));
         pedidoDao.update(pedido);
         assertEquals(2, pedidoDao.getById(pedido.getId()).getPizzas().size());
 
@@ -173,9 +188,19 @@ public class DaoTest {
     }
 
     @Test
+    public void pedidoExcluido() throws Exception {
+        Pedido pedido = new Pedido(cliente);
+        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(saborTeste)));
+        pedidoDao.add(pedido);
+        pedidoDao.delete(pedido);   // as pizzas saem junto (ON DELETE CASCADE)
+        assertNull(pedidoDao.getById(pedido.getId()));
+        assertFalse(saborDao.isEmUso(saborTeste));   // não sobrou pizza com o sabor
+    }
+
+    @Test
     public void excluirClienteExcluiOsPedidos() throws Exception {
         Pedido pedido = new Pedido(cliente);
-        pedido.adicionarPizza(new Pizza(new Quadrado(20), List.of(saborTeste)));
+        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(saborTeste)));
         pedidoDao.add(pedido);
         clienteDao.delete(cliente);
         assertNull(clienteDao.getById(cliente.getId()));
