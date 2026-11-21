@@ -67,7 +67,6 @@ public class TelaClientes extends TelaBase {
         // Lista (enunciado, item 1.a)
         tabela = new JTable(modelo);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabela.setAutoCreateRowSorter(true);
         JScrollPane rolagem = new JScrollPane(tabela);
         rolagem.setPreferredSize(new Dimension(620, 220));
 
@@ -127,10 +126,9 @@ public class TelaClientes extends TelaBase {
         campoNome.requestFocusInWindow();
     }
 
-    /** Linha selecionada no modelo da tabela (considerando a ordenação), ou -1. */
+    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
-        int linha = tabela.getSelectedRow();
-        return linha < 0 ? -1 : tabela.convertRowIndexToModel(linha);
+        return tabela.getSelectedRow();
     }
 
     public JTable getTabela() {

@@ -50,7 +50,6 @@ public class TelaSabores extends TelaBase {
 
         tabela = new JTable(modelo);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabela.setAutoCreateRowSorter(true);
         JScrollPane rolagem = new JScrollPane(tabela);
         rolagem.setPreferredSize(new Dimension(480, 220));
 
@@ -94,9 +93,9 @@ public class TelaSabores extends TelaBase {
         campoNome.requestFocusInWindow();
     }
 
+    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
-        int linha = tabela.getSelectedRow();
-        return linha < 0 ? -1 : tabela.convertRowIndexToModel(linha);
+        return tabela.getSelectedRow();
     }
 
     public JTable getTabela() {

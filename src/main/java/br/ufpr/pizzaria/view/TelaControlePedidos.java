@@ -32,7 +32,6 @@ public class TelaControlePedidos extends TelaBase {
 
         tabela = new JTable(modelo);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabela.setAutoCreateRowSorter(true);
         JScrollPane rolagem = new JScrollPane(tabela);
         rolagem.setPreferredSize(new Dimension(700, 280));
 
@@ -54,14 +53,13 @@ public class TelaControlePedidos extends TelaBase {
         setLocationRelativeTo(pai);
     }
 
+    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
-        int linha = tabela.getSelectedRow();
-        return linha < 0 ? -1 : tabela.convertRowIndexToModel(linha);
+        return tabela.getSelectedRow();
     }
 
-    /** Seleciona a linha do modelo informada (considerando a ordenação da tabela). */
-    public void selecionarLinha(int linhaModelo) {
-        int linha = tabela.convertRowIndexToView(linhaModelo);
+    /** Seleciona a linha informada da tabela. */
+    public void selecionarLinha(int linha) {
         tabela.setRowSelectionInterval(linha, linha);
     }
 
