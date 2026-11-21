@@ -17,10 +17,12 @@ Autor: Marcos Mello
 | Preço do cm² | Atualiza o preço do cm² de cada tipo |
 
 **Regras principais**
-- Limites: quadrado de 10 a 40 cm de lado, triângulo equilátero de 20 a 60 cm de lado, círculo de 7 a 23 cm de raio; pela área, de 100 a 1600 cm².
+- Limites: quadrado de 10 a 40 cm de lado, triângulo equilátero de 20 a 60 cm de lado, círculo de 7 a 23 cm de raio; pela área, de 100 a 1600 cm² (respeitando também os limites da forma: círculo de 153,94 a 1600 cm², triângulo de 173,21 a 1558,84 cm²).
 - Preço da pizza = área × preço do cm² do tipo; com dois sabores de tipos diferentes, usa a **média** dos dois preços.
+- Preço do cm² de cada tipo: de 0,0001 a 10,0000 (até 4 casas decimais).
 - A área é calculada por **polimorfismo**: `Forma` é abstrata e `Circulo`, `Quadrado` e `Triangulo` implementam `calcularArea()`.
 - Um cliente pode ter vários pedidos; só pedidos **abertos** podem ter as pizzas alteradas.
+- O estado do pedido só avança: Aberto → A caminho → Entregue.
 
 ## Como executar
 

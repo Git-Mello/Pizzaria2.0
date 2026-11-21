@@ -40,6 +40,22 @@ Decisões combinadas com o Mellinho:
   e os outros ficam na lista "Pedido" (com a opção "Novo pedido"). Só pedidos **Abertos** podem ser alterados.
 - Excluir sabor que está em pizza de algum pedido é **bloqueado com mensagem**.
 - O estado do pedido **só avança** (Aberto → A caminho → Entregue; pode pular etapa, não volta) — `Pedido.podeMudarPara`.
+- Preço do cm²: de 0,0001 a 10,0000, arredondado para 4 casas (como o `DECIMAL(10,4)` do banco).
+- Pizza pela área: além de 100–1600 cm², a dimensão calculada tem de respeitar os limites da forma; a mensagem
+  informa a faixa de área válida daquela forma.
+- Os três preços do cm² são gravados numa única transação (`TipoPizzaDao.update(List)`), como o pedido.
+
+## Só o que foi ensinado nas aulas (revisão de 20/11/2026)
+
+PDFs das aulas: A03 Genéricos/Coleções, A04 JDBC, A05 DAO, A06 MVC, A07 Threads, A08 Stream (= java.io) + LPOO I.
+Por isso o código **não usa**: lambdas/`forEach` (listeners são **classes anônimas**; `invokeLater` recebe um
+`Runnable` anônimo), Stream API, regex (`matches`; validação com laço/`Character`), `Collections.unmodifiableList`
+(devolve cópia `new ArrayList<>(...)`), enum com métodos por constante (`TipoForma` usa `switch`), `UIManager`,
+`ModalityType`, `NumberFormat`/`Locale`, `getSQLState`, ordenação de JTable (`setAutoCreateRowSorter`), `List.of`.
+Mantidos de propósito (explicar na defesa): transações no `PedidoDaoSql`/`TipoPizzaDaoSql` (consistência),
+`SQLIntegrityConstraintViolationException` (subclasse de `SQLException`: tratamento qualificado), `WindowAdapter`
+(classe anônima que pergunta antes de fechar o pedido com alterações), `getResourceAsStream` (o slide lê o
+`.properties` com `FileInputStream`; pelo classpath funciona dentro do `.jar`).
 
 ## Padrões do professor (seguir sempre)
 
@@ -53,6 +69,7 @@ Decisões combinadas com o Mellinho:
   registra os listeners nos botões da tela e decide o que fazer; a **tela só mostra dados** e expõe campos/botões
   por getters (não conhece Controller nem DAO). O `main` cria a tela principal e os Controllers.
 - Tabelas Swing sempre com **`AbstractTableModel`**.
+- Listeners sempre como **classes anônimas** (`new ActionListener() { ... }`), nunca lambda.
 - Herança no banco: "uma única tabela para toda a hierarquia" (coluna `pizza.forma` = CIRCULO/QUADRADO/TRIANGULO).
 - Testes com **JUnit 5**.
 
@@ -69,9 +86,10 @@ src/main/java/br/ufpr/pizzaria/
   controller/ ClienteController, PedidoController, ControlePedidosController, SaborController,
               PrecoController, TratadorErros (exceção → mensagem), Entrada (texto → número, aceita vírgula)
   view/    TelaPrincipal, TelaBase (JDialog modal + mensagens), TelaClientes, TelaPedido, TelaControlePedidos,
-           TelaSabores, TelaPrecos, *TableModel, Formato (moeda/números pt-BR), Formulario (layout)
-src/test/java/   ModelTest (regras, roda sem banco), DaoTest (MySQL; pulado se o banco não estiver acessível)
-docs/            diagramas de classes (Mermaid .mmd + .png)
+           TelaSabores, TelaPrecos, *TableModel, Formato (moeda/números com String.format), Formulario (layout)
+src/test/java/   ModelTest (regras, roda sem banco), EntradaTest (conversão de números),
+                 DaoTest (MySQL; pulado se o banco não estiver acessível)
+docs/            diagramas de classes (Mermaid .mmd + .png; o .png é gerado do .mmd com o mermaid-cli)
 ```
 
 Tabelas: `cliente` (telefone único), `tipo_pizza`, `sabor`, `pedido` (FK cliente ON DELETE CASCADE),

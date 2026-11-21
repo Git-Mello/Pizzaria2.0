@@ -4,9 +4,12 @@ classDiagram
     namespace model {
         class Forma {
             <<abstract>>
+            +AREA_MINIMA$ double
+            +AREA_MAXIMA$ double
             -double dimensao
+            +setDimensao(double dimensao)
             +calcularArea()* double
-            +getNome()* String
+            +getNome() String
             +getNomeDimensao()* String
             +getDimensaoMinima()* double
             +getDimensaoMaxima()* double
@@ -29,21 +32,27 @@ classDiagram
             +criar(double dimensao) Forma
             +criarPorArea(double area) Forma
             +calcularDimensao(double area) double
+            +getDimensaoMinima() double
+            +getDescricaoLimites() String
         }
         class Pizza {
             -long id
             -double preco
-            +calcularPreco() double
+            -calcularPreco() double
             +getArea() double
+            +getDescricaoSabores() String
         }
         class Sabor {
             -long id
             -String nome
         }
         class TipoPizza {
+            +PRECO_MINIMO$ double
+            +PRECO_MAXIMO$ double
             -long id
             -String nome
             -double precoCm2
+            +setPrecoCm2(double precoCm2)
         }
         class Pedido {
             -long id
@@ -51,6 +60,7 @@ classDiagram
             +removerPizza(int)
             +getPrecoTotal() double
             +podeSerAlterado() boolean
+            +podeMudarPara(EstadoPedido) boolean
         }
         class EstadoPedido {
             <<enumeration>>
@@ -63,6 +73,7 @@ classDiagram
             -String nome
             -String sobrenome
             -String telefone
+            +soNumeros(String texto)$ boolean
         }
     }
 
@@ -70,6 +81,7 @@ classDiagram
         class ConnectionFactory {
             -Properties properties
             +getConnection()$ Connection
+            -readProperties()$
         }
         class DaoFactory {
             +getClienteDao()$ ClienteDao
@@ -81,6 +93,7 @@ classDiagram
             <<interface>>
             +add(Cliente)
             +getAll() List~Cliente~
+            +getById(long id) Cliente
             +getByFiltro(String sobrenome, String telefone) List~Cliente~
             +update(Cliente)
             +delete(Cliente)
@@ -89,6 +102,7 @@ classDiagram
             <<interface>>
             +add(Sabor)
             +getAll() List~Sabor~
+            +getById(long id) Sabor
             +update(Sabor)
             +delete(Sabor)
             +isEmUso(Sabor) boolean
@@ -96,27 +110,35 @@ classDiagram
         class TipoPizzaDao {
             <<interface>>
             +getAll() List~TipoPizza~
+            +getById(long id) TipoPizza
             +update(TipoPizza)
+            +update(List~TipoPizza~ tipos)
         }
         class PedidoDao {
             <<interface>>
             +add(Pedido)
             +getAll() List~Pedido~
+            +getById(long id) Pedido
             +getByCliente(Cliente) List~Pedido~
             +update(Pedido)
             +updateEstado(Pedido)
+            +delete(Pedido)
         }
         class ClienteDaoSql {
             <<Singleton>>
+            +getInstance()$ ClienteDaoSql
         }
         class SaborDaoSql {
             <<Singleton>>
+            +getInstance()$ SaborDaoSql
         }
         class TipoPizzaDaoSql {
             <<Singleton>>
+            +getInstance()$ TipoPizzaDaoSql
         }
         class PedidoDaoSql {
             <<Singleton>>
+            +getInstance()$ PedidoDaoSql
         }
     }
 
@@ -140,5 +162,6 @@ classDiagram
     DaoFactory ..> TipoPizzaDaoSql
     DaoFactory ..> PedidoDaoSql
     ClienteDaoSql ..> ConnectionFactory
+    SaborDaoSql ..> ConnectionFactory
+    TipoPizzaDaoSql ..> ConnectionFactory
     PedidoDaoSql ..> ConnectionFactory
-
