@@ -14,17 +14,19 @@ final class TratadorErros {
     }
 
     /**
-     * @param e          a exceção capturada
-     * @param duplicado  mensagem para o caso de registro repetido no banco (ex.: telefone já cadastrado)
+     * @param e             a exceção capturada
+     * @param regraViolada  mensagem para quando o banco recusa a operação por uma regra (restrição):
+     *                      chave única repetida (ex.: telefone já cadastrado) ou registro em uso
+     *                      (ex.: sabor que está em pizzas). Pode ser null.
      */
-    static String mensagem(Exception e, String duplicado) {
+    static String mensagem(Exception e, String regraViolada) {
         if (e instanceof IllegalArgumentException) {
             // Validação de dados (lançada pelo Model ou pela conversão de números)
             return e.getMessage();
         }
         if (e instanceof SQLIntegrityConstraintViolationException) {
-            // Violação de chave única ou estrangeira no MySQL
-            return duplicado != null ? duplicado : "A operação viola uma regra do banco de dados: " + e.getMessage();
+            // Violação de chave única ou estrangeira no MySQL (subclasse de SQLException: testada antes dela)
+            return regraViolada != null ? regraViolada : "A operação viola uma regra do banco de dados: " + e.getMessage();
         }
         if (e instanceof SQLException) {
             // Inclui a falha de conexão, cuja mensagem já vem explicada pela ConnectionFactory

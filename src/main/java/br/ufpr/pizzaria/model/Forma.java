@@ -38,8 +38,10 @@ public abstract class Forma {
     /** Área da forma em cm². */
     public abstract double calcularArea();
 
-    /** Nome da forma para exibição: "Círculo", "Quadrado" ou "Triângulo". */
-    public abstract String getNome();
+    /** Nome da forma para exibição: "Círculo", "Quadrado" ou "Triângulo" (o nome do seu TipoForma). */
+    public String getNome() {
+        return getTipo().toString();
+    }
 
     /** Nome da dimensão: "raio" ou "lado". */
     public abstract String getNomeDimensao();
@@ -50,9 +52,4 @@ public abstract class Forma {
 
     /** Tipo da forma, usado para gravar no banco (coluna pizza.forma). */
     public abstract TipoForma getTipo();
-
-    @Override
-    public String toString() {
-        return String.format("%s (%s %.2f cm)", getNome(), getNomeDimensao(), dimensao);
-    }
 }

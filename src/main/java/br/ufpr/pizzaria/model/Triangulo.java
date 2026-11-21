@@ -17,11 +17,6 @@ public class Triangulo extends Forma {
     }
 
     @Override
-    public String getNome() {
-        return "Triângulo";
-    }
-
-    @Override
     public String getNomeDimensao() {
         return "lado";
     }

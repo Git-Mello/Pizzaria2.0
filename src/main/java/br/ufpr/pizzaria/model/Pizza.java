@@ -37,7 +37,7 @@ public class Pizza {
      * Com dois sabores, o preço do cm² é a média aritmética dos tipos dos dois (enunciado, item 2.e).
      * A área vem de forma.calcularArea(): polimorfismo — cada forma calcula a sua.
      */
-    public double calcularPreco() {
+    private double calcularPreco() {
         double somaPrecoCm2 = 0;
         for (Sabor sabor : sabores) {
             somaPrecoCm2 += sabor.getTipo().getPrecoCm2();

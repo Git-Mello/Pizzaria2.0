@@ -17,11 +17,6 @@ public class Quadrado extends Forma {
     }
 
     @Override
-    public String getNome() {
-        return "Quadrado";
-    }
-
-    @Override
     public String getNomeDimensao() {
         return "lado";
     }

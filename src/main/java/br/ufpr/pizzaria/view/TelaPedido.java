@@ -1,6 +1,7 @@
 package br.ufpr.pizzaria.view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -10,10 +11,13 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -35,7 +39,7 @@ import br.ufpr.pizzaria.model.TipoForma;
 public class TelaPedido extends TelaBase {
 
     /** Item da lista de pedidos que representa "criar um pedido novo". */
-    public static final String NOVO_PEDIDO = "Novo pedido";
+    private static final String NOVO_PEDIDO = "Novo pedido";
 
     // Cliente e pedido
     private final JTextField campoTelefone = new JTextField(11);
@@ -90,9 +94,10 @@ public class TelaPedido extends TelaBase {
         linhaArea.add(botaoCalcular);
         linhaArea.add(new JLabel("(100 a 1600 cm²)"));
 
-        comboSabor2.setRenderer(new javax.swing.DefaultListCellRenderer() {
+        // Classe anônima que herda de DefaultListCellRenderer: mostra um texto no lugar do item vazio (null)
+        comboSabor2.setRenderer(new DefaultListCellRenderer() {
             @Override
-            public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> lista, Object valor,
+            public Component getListCellRendererComponent(JList<?> lista, Object valor,
                     int indice, boolean selecionado, boolean foco) {
                 return super.getListCellRendererComponent(lista, valor == null ? "(sem segundo sabor)" : valor,
                         indice, selecionado, foco);
@@ -207,7 +212,7 @@ public class TelaPedido extends TelaBase {
     /** Habilita ou não a montagem de pizzas, mostrando a situação do pedido. */
     public void setPodeEditar(boolean pode, String situacao) {
         rotuloSituacao.setText(situacao);
-        for (javax.swing.JComponent c : new javax.swing.JComponent[] {comboForma, opcaoDimensao, opcaoArea,
+        for (JComponent c : new JComponent[] {comboForma, opcaoDimensao, opcaoArea,
                 campoDimensao, comboSabor1, comboSabor2, botaoAdicionar, botaoRemover, botaoSalvar}) {
             c.setEnabled(pode);
         }

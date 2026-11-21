@@ -154,8 +154,7 @@ public class PedidoController {
         try {
             List<Cliente> clientes = clienteDao.getByFiltro("", telefone);
             if (clientes.isEmpty()) {
-                view.mostrarErro("Nenhum cliente com esse telefone. O cliente deve ser cadastrado antes "
-                        + "na tela de Clientes (enunciado: cliente previamente cadastrado).");
+                view.mostrarErro("Nenhum cliente com esse telefone. Cadastre o cliente antes na tela de Clientes.");
                 return;
             }
             ignorarEventos = true;

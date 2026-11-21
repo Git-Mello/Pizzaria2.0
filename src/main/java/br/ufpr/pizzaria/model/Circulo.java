@@ -17,11 +17,6 @@ public class Circulo extends Forma {
     }
 
     @Override
-    public String getNome() {
-        return "Círculo";
-    }
-
-    @Override
     public String getNomeDimensao() {
         return "raio";
     }
