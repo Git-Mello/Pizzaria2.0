@@ -52,6 +52,11 @@ public class ControlePedidosController {
             view.mostrarErro("O pedido " + pedido.getId() + " já está \"" + novo + "\".");
             return;
         }
+        if (!pedido.podeMudarPara(novo)) {
+            view.mostrarErro("O pedido " + pedido.getId() + " está \"" + pedido.getEstado() + "\" e não pode voltar para \""
+                    + novo + "\".\nO estado só avança: Aberto → A caminho → Entregue.");
+            return;
+        }
         EstadoPedido anterior = pedido.getEstado();
         try {
             pedido.setEstado(novo);

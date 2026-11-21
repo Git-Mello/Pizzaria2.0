@@ -69,6 +69,14 @@ public class Pedido {
         this.estado = estado;
     }
 
+    /**
+     * O estado só avança: Aberto → A caminho → Entregue (pode pular etapa, mas não volta).
+     * ordinal() é a posição da constante no enum EstadoPedido (ABERTO = 0, A_CAMINHO = 1, ENTREGUE = 2).
+     */
+    public boolean podeMudarPara(EstadoPedido novo) {
+        return novo != null && novo.ordinal() > estado.ordinal();
+    }
+
     /** Só pedidos abertos podem ter as pizzas alteradas. */
     public boolean podeSerAlterado() {
         return estado == EstadoPedido.ABERTO;

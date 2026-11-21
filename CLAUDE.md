@@ -39,6 +39,7 @@ Decisões combinadas com o Mellinho:
 - Um cliente pode ter **vários pedidos**. Na tela de pedido, ao escolher o cliente, o pedido mais recente é aberto
   e os outros ficam na lista "Pedido" (com a opção "Novo pedido"). Só pedidos **Abertos** podem ser alterados.
 - Excluir sabor que está em pizza de algum pedido é **bloqueado com mensagem**.
+- O estado do pedido **só avança** (Aberto → A caminho → Entregue; pode pular etapa, não volta) — `Pedido.podeMudarPara`.
 
 ## Padrões do professor (seguir sempre)
 

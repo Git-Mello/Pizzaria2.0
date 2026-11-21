@@ -111,6 +111,17 @@ public class ModelTest {
         assertFalse(pedido.podeSerAlterado());
     }
 
+    @Test
+    public void estadoDoPedidoSoAvanca() {
+        Pedido pedido = new Pedido(new Cliente("Ana", "Souza", "41999990000"));
+        assertTrue(pedido.podeMudarPara(EstadoPedido.A_CAMINHO));
+        assertTrue(pedido.podeMudarPara(EstadoPedido.ENTREGUE));   // pode pular etapa
+        assertFalse(pedido.podeMudarPara(EstadoPedido.ABERTO));    // já está aberto
+        pedido.setEstado(EstadoPedido.ENTREGUE);
+        assertFalse(pedido.podeMudarPara(EstadoPedido.A_CAMINHO));
+        assertFalse(pedido.podeMudarPara(EstadoPedido.ABERTO));
+    }
+
     // ---------- Cliente: validações ----------
 
     @Test
