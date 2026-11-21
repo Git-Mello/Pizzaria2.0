@@ -1,9 +1,7 @@
 package br.ufpr.pizzaria.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Uma pizza do pedido (tabela pizza + pizza_sabor): forma, 1 ou 2 sabores e preço.
@@ -67,8 +65,9 @@ public class Pizza {
         this.forma = forma;
     }
 
+    /** Devolve uma cópia da lista: quem recebe não consegue mudar os sabores da pizza por fora. */
     public List<Sabor> getSabores() {
-        return Collections.unmodifiableList(sabores);
+        return new ArrayList<>(sabores);
     }
 
     private void setSabores(List<Sabor> sabores) {
@@ -94,6 +93,13 @@ public class Pizza {
 
     /** Ex.: "Calabresa / Quatro Queijos". */
     public String getDescricaoSabores() {
-        return sabores.stream().map(Sabor::getNome).collect(Collectors.joining(" / "));
+        String descricao = "";
+        for (Sabor sabor : sabores) {
+            if (!descricao.isEmpty()) {
+                descricao += " / ";
+            }
+            descricao += sabor.getNome();
+        }
+        return descricao;
     }
 }

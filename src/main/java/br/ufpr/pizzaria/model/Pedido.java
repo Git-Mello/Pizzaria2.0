@@ -1,7 +1,6 @@
 package br.ufpr.pizzaria.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,8 +39,12 @@ public class Pedido {
         return cliente;
     }
 
+    /**
+     * Devolve uma cópia da lista: para incluir ou remover pizzas é preciso usar
+     * adicionarPizza/removerPizza (que validam).
+     */
     public List<Pizza> getPizzas() {
-        return Collections.unmodifiableList(pizzas);
+        return new ArrayList<>(pizzas);
     }
 
     public void adicionarPizza(Pizza pizza) {

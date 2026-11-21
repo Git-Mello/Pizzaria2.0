@@ -49,10 +49,25 @@ public class Cliente {
 
     /** Telefone: só números, com DDD (10 ou 11 dígitos). */
     public void setTelefone(String telefone) {
-        if (telefone == null || !telefone.trim().matches("\\d{10,11}")) {
+        String limpo = (telefone == null) ? "" : telefone.trim();
+        if (limpo.length() < 10 || limpo.length() > 11 || !soNumeros(limpo)) {
             throw new IllegalArgumentException("O telefone deve ter 10 ou 11 números, com DDD e sem espaços ou traços.");
         }
-        this.telefone = telefone.trim();
+        this.telefone = limpo;
+    }
+
+    /** Indica se o texto não é vazio e tem só os dígitos de 0 a 9 (usado também na busca por telefone). */
+    public static boolean soNumeros(String texto) {
+        if (texto == null || texto.isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < texto.length(); i++) {
+            char c = texto.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Nome e sobrenome: obrigatórios, até 45 letras (aceita acentos, espaço, apóstrofo e hífen). */
@@ -64,8 +79,12 @@ public class Cliente {
         if (limpo.length() > 45) {
             throw new IllegalArgumentException("O " + campo + " pode ter no máximo 45 caracteres.");
         }
-        if (!limpo.matches("[\\p{L} '\\-]+")) {
-            throw new IllegalArgumentException("O " + campo + " deve conter apenas letras.");
+        for (int i = 0; i < limpo.length(); i++) {
+            char c = limpo.charAt(i);
+            // Character.isLetter aceita letras com acento (á, ç, ã...)
+            if (!Character.isLetter(c) && c != ' ' && c != '\'' && c != '-') {
+                throw new IllegalArgumentException("O " + campo + " deve conter apenas letras.");
+            }
         }
         return limpo;
     }

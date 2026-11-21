@@ -144,7 +144,7 @@ public class PedidoController {
     /** Busca o cliente pelo telefone (enunciado, item 2.b). */
     private void buscarCliente() {
         String telefone = view.getTelefoneBusca().trim();
-        if (!telefone.matches("\\d+")) {
+        if (!Cliente.soNumeros(telefone)) {
             view.mostrarErro("Digite o telefone do cliente (ou parte dele), só com números.");
             return;
         }

@@ -15,9 +15,18 @@ final class Entrada {
             throw new IllegalArgumentException("Preencha o campo " + nomeCampo + ".");
         }
         String limpo = texto.trim();
-        if (!limpo.matches("\\d+([.,]\\d+)?")) {
-            throw new IllegalArgumentException("O campo " + nomeCampo + " deve ser um número (ex.: 12,5). Valor digitado: \"" + limpo + "\".");
+        String mensagem = "O campo " + nomeCampo + " deve ser um número (ex.: 12,5). Valor digitado: \"" + limpo + "\".";
+        double numero;
+        try {
+            numero = Double.parseDouble(limpo.replace(',', '.'));
+        } catch (NumberFormatException e) {
+            // Troca a exceção técnica por uma com mensagem para o usuário
+            throw new IllegalArgumentException(mensagem);
         }
-        return Double.parseDouble(limpo.replace(',', '.'));
+        // parseDouble também aceita "NaN" e "Infinity", que não são valores válidos aqui
+        if (Double.isNaN(numero) || Double.isInfinite(numero)) {
+            throw new IllegalArgumentException(mensagem);
+        }
+        return numero;
     }
 }

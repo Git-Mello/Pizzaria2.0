@@ -2,61 +2,14 @@ package br.ufpr.pizzaria.model;
 
 /**
  * Os três tipos de forma. Também serve de "fábrica": cria a subclasse certa de Forma
- * a partir da dimensão ou da área. O nome da constante é o que fica gravado no banco.
+ * a partir da dimensão ou da área. O nome da constante é o que fica gravado no banco
+ * (coluna pizza.forma).
  */
 public enum TipoForma {
 
-    CIRCULO("Círculo") {
-        @Override
-        public Forma criar(double raio) {
-            return new Circulo(raio);
-        }
-
-        @Override
-        public double getDimensaoMinima() {
-            return Circulo.MINIMO;
-        }
-
-        /** Raio a partir da área: raiz(área / PI). */
-        @Override
-        public double calcularDimensao(double area) {
-            return Math.sqrt(area / Math.PI);
-        }
-    },
-    QUADRADO("Quadrado") {
-        @Override
-        public Forma criar(double lado) {
-            return new Quadrado(lado);
-        }
-
-        @Override
-        public double getDimensaoMinima() {
-            return Quadrado.MINIMO;
-        }
-
-        /** Lado a partir da área: raiz(área). */
-        @Override
-        public double calcularDimensao(double area) {
-            return Math.sqrt(area);
-        }
-    },
-    TRIANGULO("Triângulo") {
-        @Override
-        public Forma criar(double lado) {
-            return new Triangulo(lado);
-        }
-
-        @Override
-        public double getDimensaoMinima() {
-            return Triangulo.MINIMO;
-        }
-
-        /** Lado do triângulo equilátero a partir da área: raiz(4 x área / raiz(3)). */
-        @Override
-        public double calcularDimensao(double area) {
-            return Math.sqrt(4 * area / Math.sqrt(3));
-        }
-    };
+    CIRCULO("Círculo"),
+    QUADRADO("Quadrado"),
+    TRIANGULO("Triângulo");
 
     private final String nome;
 
@@ -64,21 +17,48 @@ public enum TipoForma {
         this.nome = nome;
     }
 
+    /** Cria a forma com a dimensão (raio ou lado) informada. Os limites são validados pela própria forma. */
+    public Forma criar(double dimensao) {
+        switch (this) {
+            case CIRCULO:
+                return new Circulo(dimensao);
+            case QUADRADO:
+                return new Quadrado(dimensao);
+            default:
+                return new Triangulo(dimensao);
+        }
+    }
+
+    /** Dimensão (raio ou lado) que gera a área informada. */
+    public double calcularDimensao(double area) {
+        switch (this) {
+            case CIRCULO:
+                return Math.sqrt(area / Math.PI);           // raio = raiz(área / PI)
+            case QUADRADO:
+                return Math.sqrt(area);                     // lado = raiz(área)
+            default:
+                return Math.sqrt(4 * area / Math.sqrt(3));  // lado do triângulo equilátero = raiz(4 x área / raiz(3))
+        }
+    }
+
     /** Menor dimensão aceita pela forma (vem da constante da subclasse). */
-    public abstract double getDimensaoMinima();
+    public double getDimensaoMinima() {
+        switch (this) {
+            case CIRCULO:
+                return Circulo.MINIMO;
+            case QUADRADO:
+                return Quadrado.MINIMO;
+            default:
+                return Triangulo.MINIMO;
+        }
+    }
 
     /** Texto com os limites, para mostrar na tela. Ex.: "raio de 7 a 23 cm". */
     public String getDescricaoLimites() {
-        Forma exemplo = criar(getDimensaoMinima());
-        return String.format("%s de %.0f a %.0f cm", exemplo.getNomeDimensao(),
-                exemplo.getDimensaoMinima(), exemplo.getDimensaoMaxima());
+        Forma menor = criar(getDimensaoMinima());   // a forma no menor tamanho sabe o nome e os limites da dimensão
+        return String.format("%s de %.0f a %.0f cm", menor.getNomeDimensao(),
+                menor.getDimensaoMinima(), menor.getDimensaoMaxima());
     }
-
-    /** Cria a forma com a dimensão (raio ou lado) informada. Os limites são validados pela própria forma. */
-    public abstract Forma criar(double dimensao);
-
-    /** Dimensão (raio ou lado) que gera a área informada. */
-    public abstract double calcularDimensao(double area);
 
     /**
      * Cria a forma a partir da área em cm² (enunciado, item 2.c.iv):
