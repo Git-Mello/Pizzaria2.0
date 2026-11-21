@@ -1,5 +1,6 @@
 package br.ufpr.pizzaria.controller;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import br.ufpr.pizzaria.model.TipoPizza;
@@ -40,9 +41,8 @@ public class PrecoController {
                 double preco = Entrada.lerNumero(item.getValue(), "preço da pizza " + item.getKey().getNome());
                 item.getKey().setPrecoCm2(preco);   // valida: maior que zero
             }
-            for (TipoPizza tipo : digitados.keySet()) {
-                dao.update(tipo);
-            }
+            // Grava os três preços numa única transação: se der erro, nenhum é alterado
+            dao.update(new ArrayList<>(digitados.keySet()));
             view.mostrarMensagem("Preços atualizados. Valem para as próximas pizzas montadas.");
             view.dispose();
         } catch (Exception e) {

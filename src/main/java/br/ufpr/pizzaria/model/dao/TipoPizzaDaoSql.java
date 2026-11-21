@@ -62,4 +62,22 @@ public class TipoPizzaDaoSql implements TipoPizzaDao {
             stmt.executeUpdate();
         }
     }
+
+    @Override
+    public void update(List<TipoPizza> tipos) throws SQLException, IOException {
+        try (Connection con = ConnectionFactory.getConnection()) {
+            con.setAutoCommit(false);   // tudo ou nada: os preços de todos os tipos
+            try (PreparedStatement stmt = con.prepareStatement(update)) {
+                for (TipoPizza tipo : tipos) {
+                    stmt.setDouble(1, tipo.getPrecoCm2());
+                    stmt.setLong(2, tipo.getId());
+                    stmt.executeUpdate();
+                }
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                throw ex;
+            }
+        }
+    }
 }

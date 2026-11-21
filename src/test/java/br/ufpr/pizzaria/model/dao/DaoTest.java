@@ -116,6 +116,20 @@ public class DaoTest {
     }
 
     @Test
+    public void precosDeTodosOsTiposAtualizadosJuntos() throws Exception {
+        List<TipoPizza> tipos = tipoDao.getAll();
+        List<TipoPizza> originais = tipoDao.getAll();
+        for (TipoPizza tipo : tipos) {
+            tipo.setPrecoCm2(tipo.getPrecoCm2() + 0.01);
+        }
+        tipoDao.update(tipos);
+        for (int i = 0; i < tipos.size(); i++) {
+            assertEquals(tipos.get(i).getPrecoCm2(), tipoDao.getById(tipos.get(i).getId()).getPrecoCm2(), 0.00001);
+        }
+        tipoDao.update(originais);   // volta os preços originais
+    }
+
+    @Test
     public void saborComTipoIncluidoEUsoDetectado() throws Exception {
         assertNotNull(saborDao.getById(saborTeste.getId()));
         assertFalse(saborDao.isEmUso(saborTeste));

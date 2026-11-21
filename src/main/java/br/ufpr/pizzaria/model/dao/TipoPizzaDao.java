@@ -18,4 +18,7 @@ public interface TipoPizzaDao {
 
     /** Atualiza o preço do cm² (enunciado, item 3). */
     void update(TipoPizza tipo) throws SQLException, IOException;
+
+    /** Atualiza o preço do cm² de vários tipos numa única transação (ou grava todos, ou nenhum). */
+    void update(List<TipoPizza> tipos) throws SQLException, IOException;
 }
