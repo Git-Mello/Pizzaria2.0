@@ -1,5 +1,7 @@
 package br.ufpr.pizzaria.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -43,7 +45,12 @@ public class PedidoController {
 
     public PedidoController(TelaPrincipal principal) {
         this.principal = principal;
-        principal.getBotaoPedido().addActionListener(e -> abrirTela());
+        principal.getBotaoPedido().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirTela();
+            }
+        });
     }
 
     private void abrirTela() {
@@ -66,22 +73,58 @@ public class PedidoController {
         view.setSabores(sabores);
         atualizarLimites();
 
-        view.getBotaoBuscar().addActionListener(e -> buscarCliente());
-        view.getComboClientes().addActionListener(e -> {
-            if (!ignorarEventos) {
-                clienteEscolhido();
+        view.getBotaoBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarCliente();
             }
         });
-        view.getComboPedidos().addActionListener(e -> {
-            if (!ignorarEventos) {
-                pedidoEscolhido();
+        view.getComboClientes().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!ignorarEventos) {
+                    clienteEscolhido();
+                }
             }
         });
-        view.getComboForma().addActionListener(e -> atualizarLimites());
-        view.getBotaoCalcular().addActionListener(e -> calcularDimensao());
-        view.getBotaoAdicionar().addActionListener(e -> adicionarPizza());
-        view.getBotaoRemover().addActionListener(e -> removerPizza());
-        view.getBotaoSalvar().addActionListener(e -> salvar());
+        view.getComboPedidos().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!ignorarEventos) {
+                    pedidoEscolhido();
+                }
+            }
+        });
+        view.getComboForma().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarLimites();
+            }
+        });
+        view.getBotaoCalcular().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calcularDimensao();
+            }
+        });
+        view.getBotaoAdicionar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                adicionarPizza();
+            }
+        });
+        view.getBotaoRemover().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removerPizza();
+            }
+        });
+        view.getBotaoSalvar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                salvar();
+            }
+        });
 
         // Ao fechar com mudanças não salvas, pergunta antes
         view.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

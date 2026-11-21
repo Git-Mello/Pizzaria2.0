@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -133,8 +135,14 @@ public class TelaPedido extends TelaBase {
         setContentPane(painel);
 
         // Ajustes visuais que não envolvem regra: habilitar o campo da opção escolhida
-        opcaoDimensao.addActionListener(e -> atualizarModoTamanho());
-        opcaoArea.addActionListener(e -> atualizarModoTamanho());
+        ActionListener trocaModo = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarModoTamanho();
+            }
+        };
+        opcaoDimensao.addActionListener(trocaModo);
+        opcaoArea.addActionListener(trocaModo);
         atualizarModoTamanho();
         setTotal(0);
         setPodeEditar(false, "Busque o cliente pelo telefone para começar.");

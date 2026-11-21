@@ -20,23 +20,28 @@ import br.ufpr.pizzaria.view.TelaPrincipal;
 public class Pizzaria {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                // Aparência do sistema operacional (no Windows, botões e janelas do Windows)
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                // Se não conseguir, segue com a aparência padrão do Java
+        // As telas Swing devem ser criadas na thread de eventos do Swing (Event Dispatch Thread).
+        // invokeLater recebe um Runnable (aula de Threads) e executa o run() nessa thread.
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Aparência do sistema operacional (no Windows, botões e janelas do Windows)
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    // Se não conseguir, segue com a aparência padrão do Java
+                }
+
+                TelaPrincipal principal = new TelaPrincipal();
+                new PedidoController(principal);
+                new ControlePedidosController(principal);
+                new ClienteController(principal);
+                new SaborController(principal);
+                new PrecoController(principal);
+                principal.setVisible(true);
+
+                verificarBanco(principal);
             }
-
-            TelaPrincipal principal = new TelaPrincipal();
-            new PedidoController(principal);
-            new ControlePedidosController(principal);
-            new ClienteController(principal);
-            new SaborController(principal);
-            new PrecoController(principal);
-            principal.setVisible(true);
-
-            verificarBanco(principal);
         });
     }
 

@@ -1,5 +1,11 @@
 package br.ufpr.pizzaria.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import br.ufpr.pizzaria.model.Cliente;
 import br.ufpr.pizzaria.model.dao.ClienteDao;
 import br.ufpr.pizzaria.model.dao.DaoFactory;
@@ -24,7 +30,13 @@ public class ClienteController {
 
     public ClienteController(TelaPrincipal principal) {
         this.principal = principal;
-        principal.getBotaoClientes().addActionListener(e -> abrirTela());
+        // Classe anônima: implementa ActionListener ali mesmo, só para este botão
+        principal.getBotaoClientes().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirTela();
+            }
+        });
     }
 
     private void abrirTela() {
@@ -35,16 +47,49 @@ public class ClienteController {
             return;
         }
         view = new TelaClientes(principal, model);
-        view.getBotaoIncluir().addActionListener(e -> incluir());
-        view.getBotaoAtualizar().addActionListener(e -> atualizar());
-        view.getBotaoExcluir().addActionListener(e -> excluir());
-        view.getBotaoLimpar().addActionListener(e -> view.limparCampos());
-        view.getBotaoFiltrar().addActionListener(e -> filtrar());
-        view.getBotaoMostrarTodos().addActionListener(e -> mostrarTodos());
+        view.getBotaoIncluir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                incluir();
+            }
+        });
+        view.getBotaoAtualizar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizar();
+            }
+        });
+        view.getBotaoExcluir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                excluir();
+            }
+        });
+        view.getBotaoLimpar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.limparCampos();
+            }
+        });
+        view.getBotaoFiltrar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                filtrar();
+            }
+        });
+        view.getBotaoMostrarTodos().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarTodos();
+            }
+        });
         // Ao clicar num cliente da lista, os dados vão para os campos
-        view.getTabela().getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
-                view.preencherCampos(model.getCliente(view.getLinhaSelecionada()));
+        view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
+                    view.preencherCampos(model.getCliente(view.getLinhaSelecionada()));
+                }
             }
         });
         view.setVisible(true);

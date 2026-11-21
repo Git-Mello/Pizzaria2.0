@@ -3,6 +3,8 @@ package br.ufpr.pizzaria.view;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,13 @@ public class TelaPrecos extends TelaBase {
         super(pai, "Preço do cm²");
 
         JButton botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.addActionListener(evento -> dispose());
+        // Cancelar só fecha a janela (não há regra a decidir, por isso fica na própria tela)
+        botaoCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         botoes.add(botaoSalvar);
         botoes.add(botaoCancelar);
@@ -56,7 +64,9 @@ public class TelaPrecos extends TelaBase {
     /** Texto digitado para cada tipo (o Controller converte e valida). */
     public Map<TipoPizza, String> getPrecosDigitados() {
         Map<TipoPizza, String> precos = new LinkedHashMap<>();
-        campos.forEach((tipo, campo) -> precos.put(tipo, campo.getText()));
+        for (Map.Entry<TipoPizza, JTextField> item : campos.entrySet()) {
+            precos.put(item.getKey(), item.getValue().getText());
+        }
         return precos;
     }
 

@@ -1,5 +1,11 @@
 package br.ufpr.pizzaria.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import br.ufpr.pizzaria.model.EstadoPedido;
 import br.ufpr.pizzaria.model.Pedido;
 import br.ufpr.pizzaria.model.dao.DaoFactory;
@@ -18,7 +24,12 @@ public class ControlePedidosController {
 
     public ControlePedidosController(TelaPrincipal principal) {
         this.principal = principal;
-        principal.getBotaoControlePedidos().addActionListener(e -> abrirTela());
+        principal.getBotaoControlePedidos().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirTela();
+            }
+        });
     }
 
     private void abrirTela() {
@@ -29,12 +40,25 @@ public class ControlePedidosController {
             return;
         }
         view = new TelaControlePedidos(principal, model);
-        view.getBotaoAlterarEstado().addActionListener(e -> alterarEstado());
-        view.getBotaoAtualizarLista().addActionListener(e -> recarregar());
+        view.getBotaoAlterarEstado().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                alterarEstado();
+            }
+        });
+        view.getBotaoAtualizarLista().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recarregar();
+            }
+        });
         // Ao selecionar um pedido, a caixa de estado mostra o estado atual dele
-        view.getTabela().getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
-                view.setEstadoEscolhido(model.getPedido(view.getLinhaSelecionada()).getEstado());
+        view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
+                    view.setEstadoEscolhido(model.getPedido(view.getLinhaSelecionada()).getEstado());
+                }
             }
         });
         view.setVisible(true);

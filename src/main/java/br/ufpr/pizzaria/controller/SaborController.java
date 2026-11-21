@@ -1,5 +1,11 @@
 package br.ufpr.pizzaria.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.dao.DaoFactory;
 import br.ufpr.pizzaria.model.dao.SaborDao;
@@ -21,7 +27,12 @@ public class SaborController {
 
     public SaborController(TelaPrincipal principal) {
         this.principal = principal;
-        principal.getBotaoSabores().addActionListener(e -> abrirTela());
+        principal.getBotaoSabores().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirTela();
+            }
+        });
     }
 
     private void abrirTela() {
@@ -34,13 +45,37 @@ public class SaborController {
             view.dispose();
             return;
         }
-        view.getBotaoIncluir().addActionListener(e -> incluir());
-        view.getBotaoAtualizar().addActionListener(e -> atualizar());
-        view.getBotaoExcluir().addActionListener(e -> excluir());
-        view.getBotaoLimpar().addActionListener(e -> view.limparCampos());
-        view.getTabela().getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
-                view.preencherCampos(model.getSabor(view.getLinhaSelecionada()));
+        view.getBotaoIncluir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                incluir();
+            }
+        });
+        view.getBotaoAtualizar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizar();
+            }
+        });
+        view.getBotaoExcluir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                excluir();
+            }
+        });
+        view.getBotaoLimpar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.limparCampos();
+            }
+        });
+        // Ao clicar num sabor da lista, os dados vão para os campos
+        view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && view.getLinhaSelecionada() >= 0) {
+                    view.preencherCampos(model.getSabor(view.getLinhaSelecionada()));
+                }
             }
         });
         view.setVisible(true);
