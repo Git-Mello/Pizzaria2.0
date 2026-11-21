@@ -1,8 +1,7 @@
 package br.ufpr.pizzaria.view;
 
-import java.awt.Window;
-
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -11,8 +10,8 @@ import javax.swing.JOptionPane;
  */
 public abstract class TelaBase extends JDialog {
 
-    protected TelaBase(Window pai, String titulo) {
-        super(pai, titulo, ModalityType.APPLICATION_MODAL);
+    protected TelaBase(JFrame pai, String titulo) {
+        super(pai, titulo, true);   // true = modal: bloqueia a tela principal enquanto estiver aberta
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 

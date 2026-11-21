@@ -3,11 +3,11 @@ package br.ufpr.pizzaria.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,7 +27,7 @@ public class TelaControlePedidos extends TelaBase {
     private final JButton botaoAlterarEstado = new JButton("Alterar estado");
     private final JButton botaoAtualizarLista = new JButton("Atualizar lista");
 
-    public TelaControlePedidos(Window pai, PedidoTableModel modelo) {
+    public TelaControlePedidos(JFrame pai, PedidoTableModel modelo) {
         super(pai, "Controle de Pedidos");
 
         tabela = new JTable(modelo);

@@ -23,10 +23,18 @@ public class ConnectionFactory {
 
     public static Connection getConnection() throws SQLException, IOException {
         readProperties();
-        return DriverManager.getConnection(
-                properties.getProperty("db.url"),
-                properties.getProperty("db.user"),
-                properties.getProperty("db.pwd"));
+        try {
+            return DriverManager.getConnection(
+                    properties.getProperty("db.url"),
+                    properties.getProperty("db.user"),
+                    properties.getProperty("db.pwd"));
+        } catch (SQLException e) {
+            // Qualquer falha aqui é de conexão (MySQL desligado, banco inexistente, senha errada...):
+            // lança outra SQLException com uma mensagem que o usuário entende (a original vai como causa)
+            throw new SQLException("Não foi possível conectar ao banco de dados \"pizzaria\".\n"
+                    + "Verifique se o MySQL está ligado, se o script banco/pizzaria.sql foi executado\n"
+                    + "e se usuário e senha em db.properties estão corretos.\n\nDetalhe: " + e.getMessage(), e);
+        }
     }
 
     /**

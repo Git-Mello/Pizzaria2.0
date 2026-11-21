@@ -27,15 +27,8 @@ final class TratadorErros {
             return duplicado != null ? duplicado : "A operação viola uma regra do banco de dados: " + e.getMessage();
         }
         if (e instanceof SQLException) {
-            SQLException sql = (SQLException) e;
-            if (sql.getSQLState() != null && sql.getSQLState().startsWith("08")) {
-                return "Não foi possível conectar ao banco de dados. Verifique se o MySQL está ligado "
-                        + "e se os dados do arquivo db.properties estão corretos.\n\nDetalhe: " + e.getMessage();
-            }
-            if (e.getMessage() != null && e.getMessage().contains("No suitable driver")) {
-                return "Driver do MySQL não encontrado no projeto (mysql-connector-j).";
-            }
-            return "Erro no banco de dados: " + e.getMessage();
+            // Inclui a falha de conexão, cuja mensagem já vem explicada pela ConnectionFactory
+            return "Erro no banco de dados:\n" + e.getMessage();
         }
         if (e instanceof IOException) {
             return "Erro ao ler o arquivo de configuração do banco (db.properties): " + e.getMessage();

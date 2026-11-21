@@ -2,7 +2,6 @@ package br.ufpr.pizzaria.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
@@ -11,6 +10,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,7 +27,7 @@ public class TelaPrecos extends TelaBase {
     private final Map<TipoPizza, JTextField> campos = new LinkedHashMap<>();
     private final JButton botaoSalvar = new JButton("Salvar");
 
-    public TelaPrecos(Window pai) {
+    public TelaPrecos(JFrame pai) {
         super(pai, "Preço do cm²");
 
         JButton botaoCancelar = new JButton("Cancelar");

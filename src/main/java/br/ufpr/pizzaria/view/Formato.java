@@ -1,28 +1,26 @@
 package br.ufpr.pizzaria.view;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
-/** Formatação de valores para exibição nas telas (padrão brasileiro). */
+/**
+ * Formatação de valores para exibição nas telas.
+ * String.format usa o idioma do computador: no Windows em português, a vírgula é o separador decimal.
+ */
 public final class Formato {
-
-    private static final Locale BRASIL = Locale.forLanguageTag("pt-BR");
 
     private Formato() {
     }
 
-    /** Ex.: 1234.5 -> "R$ 1.234,50". */
+    /** Ex.: 1234.5 -> "R$ 1234,50". */
     public static String moeda(double valor) {
-        return NumberFormat.getCurrencyInstance(BRASIL).format(valor).replace(' ', ' ');
+        return String.format("R$ %.2f", valor);
     }
 
     /** Ex.: 11.2838 -> "11,28". */
     public static String numero(double valor) {
-        return String.format(BRASIL, "%.2f", valor);
+        return String.format("%.2f", valor);
     }
 
     /** Preço do cm², com 4 casas. Ex.: 0.05 -> "0,0500". */
     public static String precoCm2(double valor) {
-        return String.format(BRASIL, "%.4f", valor);
+        return String.format("%.4f", valor);
     }
 }

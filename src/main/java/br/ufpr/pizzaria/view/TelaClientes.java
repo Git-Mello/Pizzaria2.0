@@ -3,10 +3,10 @@ package br.ufpr.pizzaria.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,7 +37,7 @@ public class TelaClientes extends TelaBase {
 
     private final JTable tabela;
 
-    public TelaClientes(Window pai, ClienteTableModel modelo) {
+    public TelaClientes(JFrame pai, ClienteTableModel modelo) {
         super(pai, "Clientes");
 
         // Dados do cliente

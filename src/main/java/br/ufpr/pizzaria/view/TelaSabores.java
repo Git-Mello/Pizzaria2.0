@@ -3,12 +3,12 @@ package br.ufpr.pizzaria.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Window;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -33,7 +33,7 @@ public class TelaSabores extends TelaBase {
     private final JButton botaoLimpar = new JButton("Limpar");
     private final JTable tabela;
 
-    public TelaSabores(Window pai, SaborTableModel modelo) {
+    public TelaSabores(JFrame pai, SaborTableModel modelo) {
         super(pai, "Sabores");
 
         Formulario dados = new Formulario("Dados do sabor");

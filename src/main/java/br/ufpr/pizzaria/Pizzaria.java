@@ -3,7 +3,6 @@ package br.ufpr.pizzaria;
 import java.sql.Connection;
 
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import br.ufpr.pizzaria.controller.ClienteController;
 import br.ufpr.pizzaria.controller.ControlePedidosController;
@@ -25,13 +24,6 @@ public class Pizzaria {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
-                    // Aparência do sistema operacional (no Windows, botões e janelas do Windows)
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    // Se não conseguir, segue com a aparência padrão do Java
-                }
-
                 TelaPrincipal principal = new TelaPrincipal();
                 new PedidoController(principal);
                 new ControlePedidosController(principal);
@@ -50,9 +42,8 @@ public class Pizzaria {
         try (Connection con = ConnectionFactory.getConnection()) {
             // conexão ok
         } catch (Exception e) {
-            principal.mostrarErro("Não foi possível acessar o banco de dados \"pizzaria\".\n"
-                    + "Verifique se o MySQL está ligado, se o script banco/pizzaria.sql foi executado\n"
-                    + "e se usuário e senha em db.properties estão corretos.\n\nDetalhe: " + e.getMessage());
+            // SQLException: a ConnectionFactory já explica o que verificar; IOException: db.properties não encontrado
+            principal.mostrarErro(e.getMessage());
         }
     }
 }
