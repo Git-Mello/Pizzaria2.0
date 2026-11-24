@@ -32,7 +32,7 @@ public class TelaClientes extends TelaBase {
 
     private final JTextField campoFiltroSobrenome = new JTextField(14);
     private final JTextField campoFiltroTelefone = new JTextField(11);
-    private final JButton botaoFiltrar = new JButton("Filtrar");
+    private final JButton botaoFiltrar = new JButton("Buscar");
     private final JButton botaoMostrarTodos = new JButton("Mostrar todos");
 
     private final JTable tabela;
@@ -57,9 +57,9 @@ public class TelaClientes extends TelaBase {
         // Filtro (enunciado, item 1.d)
         JPanel filtro = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filtro.setBorder(BorderFactory.createTitledBorder("Filtrar clientes"));
-        filtro.add(new JLabel("Sobrenome (ou parte):"));
+        filtro.add(new JLabel("Sobrenome:"));
         filtro.add(campoFiltroSobrenome);
-        filtro.add(new JLabel("Telefone (ou parte):"));
+        filtro.add(new JLabel("Telefone:"));
         filtro.add(campoFiltroTelefone);
         filtro.add(botaoFiltrar);
         filtro.add(botaoMostrarTodos);

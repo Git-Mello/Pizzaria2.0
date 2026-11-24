@@ -74,7 +74,7 @@ public class TelaPedido extends TelaBase {
         buscaTelefone.add(campoTelefone);
         buscaTelefone.add(botaoBuscar);
         Formulario cliente = new Formulario("1. Cliente e pedido");
-        cliente.adiciona("Telefone do cliente (ou parte):", buscaTelefone);
+        cliente.adiciona("Telefone do cliente:", buscaTelefone);
         cliente.adiciona("Cliente:", comboClientes);
         cliente.adiciona("Pedido:", comboPedidos);
         cliente.adiciona("", rotuloSituacao);

@@ -10,7 +10,7 @@ import br.ufpr.pizzaria.model.Pedido;
 /** Modelo da tabela de pedidos de todos os clientes (enunciado, item 5). */
 public class PedidoTableModel extends AbstractTableModel {
 
-    private final String[] colunas = {"Pedido", "Cliente", "Telefone", "Pizzas", "Total", "Estado"};
+    private final String[] colunas = {"Pedido", "Cliente", "Telefone", "Pizzas", "Total", "Situação"};
     private List<Pedido> pedidos = new ArrayList<>();
 
     public void setPedidos(List<Pedido> pedidos) {

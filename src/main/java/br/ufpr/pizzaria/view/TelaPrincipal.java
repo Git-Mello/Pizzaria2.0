@@ -30,11 +30,10 @@ public class TelaPrincipal extends JFrame {
 
         JLabel titulo = new JLabel("Pizzaria 2.0", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 22f));
-        JLabel subtitulo = new JLabel("Pizzas vendidas por cm²", SwingConstants.CENTER);
+    
 
         JPanel cabecalho = new JPanel(new GridLayout(2, 1));
         cabecalho.add(titulo);
-        cabecalho.add(subtitulo);
 
         JPanel botoes = new JPanel(new GridLayout(0, 1, 8, 8));
         botoes.add(botaoPedido);
