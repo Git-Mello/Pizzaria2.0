@@ -17,10 +17,6 @@ import javax.swing.JTextField;
 
 import br.ufpr.pizzaria.model.TipoPizza;
 
-/**
- * Tela para atualizar o preço do centímetro quadrado de cada tipo de pizza (enunciado, item 3).
- * Quem trata o botão Salvar é o PrecoController.
- */
 public class TelaPrecos extends TelaBase {
 
     private final Formulario formulario = new Formulario("Preço do cm² (R$) por tipo de pizza");
@@ -31,7 +27,6 @@ public class TelaPrecos extends TelaBase {
         super(pai, "Preço do cm²");
 
         JButton botaoCancelar = new JButton("Cancelar");
-        // Cancelar só fecha a janela (não há regra a decidir, por isso fica na própria tela)
         botaoCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,7 +45,6 @@ public class TelaPrecos extends TelaBase {
         setContentPane(painel);
     }
 
-    /** Monta uma linha (rótulo + campo) para cada tipo, já com o preço atual. */
     public void setTipos(List<TipoPizza> tipos) {
         for (TipoPizza tipo : tipos) {
             JTextField campo = new JTextField(Formato.precoCm2(tipo.getPrecoCm2()), 10);
@@ -61,7 +55,6 @@ public class TelaPrecos extends TelaBase {
         setLocationRelativeTo(getOwner());
     }
 
-    /** Texto digitado para cada tipo (o Controller converte e valida). */
     public Map<TipoPizza, String> getPrecosDigitados() {
         Map<TipoPizza, String> precos = new LinkedHashMap<>();
         for (Map.Entry<TipoPizza, JTextField> item : campos.entrySet()) {

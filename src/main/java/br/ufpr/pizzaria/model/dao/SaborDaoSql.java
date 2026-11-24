@@ -12,13 +12,11 @@ import java.util.List;
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.TipoPizza;
 
-/** Implementação MySQL do SaborDao (padrão Singleton). */
 public class SaborDaoSql implements SaborDao {
 
     private static SaborDaoSql dao;
 
     private final String insert = "INSERT INTO sabor (nome, id_tipo) VALUES (?, ?)";
-    // INNER JOIN: traz junto o tipo do sabor (nome e preço do cm²)
     private final String selectAll = "SELECT s.id, s.nome, t.id AS id_tipo, t.nome AS nome_tipo, t.preco_cm2"
             + " FROM sabor s INNER JOIN tipo_pizza t ON t.id = s.id_tipo ORDER BY t.id, s.nome";
     private final String selectById = "SELECT s.id, s.nome, t.id AS id_tipo, t.nome AS nome_tipo, t.preco_cm2"
@@ -107,7 +105,6 @@ public class SaborDaoSql implements SaborDao {
         }
     }
 
-    /** Monta o Sabor com o seu TipoPizza a partir de uma linha do SELECT com JOIN. */
     static Sabor ler(ResultSet rs) throws SQLException {
         TipoPizza tipo = new TipoPizza(rs.getLong("id_tipo"), rs.getString("nome_tipo"), rs.getDouble("preco_cm2"));
         return new Sabor(rs.getLong("id"), rs.getString("nome"), tipo);

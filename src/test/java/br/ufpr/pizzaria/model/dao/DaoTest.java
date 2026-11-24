@@ -26,11 +26,6 @@ import br.ufpr.pizzaria.model.Quadrado;
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.TipoPizza;
 
-/**
- * Testes dos DAOs contra o MySQL (banco "pizzaria", criado pelo banco/pizzaria.sql).
- * Se o banco não estiver disponível, os testes são pulados (não falham).
- * Cada teste cria os seus próprios dados (telefone 0000000000x) e apaga tudo no final.
- */
 public class DaoTest {
 
     private final ClienteDao clienteDao = DaoFactory.getClienteDao();
@@ -57,7 +52,7 @@ public class DaoTest {
             return;
         }
         for (Cliente c : clienteDao.getByFiltro("", "0000000000")) {
-            clienteDao.delete(c);   // apaga também os pedidos (cascata)
+            clienteDao.delete(c);
         }
         for (Sabor s : saborDao.getAll()) {
             if (s.getNome().endsWith("JUnit")) {
@@ -68,13 +63,12 @@ public class DaoTest {
 
     private static boolean bancoDisponivel() {
         try (Connection con = ConnectionFactory.getConnection()) {
-            return true;   // conseguiu conectar
+            return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    /** Monta a lista de sabores de uma pizza. */
     private static List<Sabor> sabores(Sabor... lista) {
         List<Sabor> resultado = new ArrayList<>();
         for (Sabor sabor : lista) {
@@ -82,8 +76,6 @@ public class DaoTest {
         }
         return resultado;
     }
-
-    // ---------- Cliente ----------
 
     @Test
     public void clienteIncluidoRecebeIdELidoPeloId() throws Exception {
@@ -113,11 +105,8 @@ public class DaoTest {
             clienteDao.add(new Cliente("Dup", "Junit", "00000000001"));
             fail("O banco deveria recusar o telefone repetido");
         } catch (SQLException e) {
-            // esperado: chave única (uk_cliente_telefone)
         }
     }
-
-    // ---------- Tipo e Sabor ----------
 
     @Test
     public void precoDoTipoAtualizado() throws Exception {
@@ -127,7 +116,7 @@ public class DaoTest {
         tipoDao.update(tipo);
         assertEquals(original + 0.01, tipoDao.getById(tipo.getId()).getPrecoCm2(), 0.00001);
         tipo.setPrecoCm2(original);
-        tipoDao.update(tipo);   // volta o preço original
+        tipoDao.update(tipo);
     }
 
     @Test
@@ -141,7 +130,7 @@ public class DaoTest {
         for (int i = 0; i < tipos.size(); i++) {
             assertEquals(tipos.get(i).getPrecoCm2(), tipoDao.getById(tipos.get(i).getId()).getPrecoCm2(), 0.00001);
         }
-        tipoDao.update(originais);   // volta os preços originais
+        tipoDao.update(originais);
     }
 
     @Test
@@ -153,8 +142,6 @@ public class DaoTest {
         pedidoDao.add(pedido);
         assertTrue(saborDao.isEmUso(saborTeste));
     }
-
-    // ---------- Pedido ----------
 
     @Test
     public void pedidoGravadoComPizzasESaboresELidoDeVolta() throws Exception {
@@ -192,9 +179,9 @@ public class DaoTest {
         Pedido pedido = new Pedido(cliente);
         pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(saborTeste)));
         pedidoDao.add(pedido);
-        pedidoDao.delete(pedido);   // as pizzas saem junto (ON DELETE CASCADE)
+        pedidoDao.delete(pedido);
         assertNull(pedidoDao.getById(pedido.getId()));
-        assertFalse(saborDao.isEmUso(saborTeste));   // não sobrou pizza com o sabor
+        assertFalse(saborDao.isEmUso(saborTeste));
     }
 
     @Test

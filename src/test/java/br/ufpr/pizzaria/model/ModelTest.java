@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Testes das regras do Model: formas (herança e polimorfismo), preços e validações. */
 public class ModelTest {
 
     private static final double DELTA = 0.0001;
@@ -20,9 +19,6 @@ public class ModelTest {
     private final Sabor mussarela = new Sabor(1, "Mussarela", simples);
     private final Sabor camarao = new Sabor(2, "Camarão", premium);
 
-    // ---------- Auxiliares: verificam que a operação é recusada (lança IllegalArgumentException) ----------
-
-    /** Monta a lista de sabores de uma pizza. */
     private static List<Sabor> sabores(Sabor... lista) {
         List<Sabor> resultado = new ArrayList<>();
         for (Sabor sabor : lista) {
@@ -31,7 +27,6 @@ public class ModelTest {
         return resultado;
     }
 
-    /** Criar a forma com essa dimensão deve ser recusado. Devolve a mensagem do erro. */
     private static String formaRecusada(TipoForma tipo, double dimensao) {
         try {
             tipo.criar(dimensao);
@@ -42,7 +37,6 @@ public class ModelTest {
         return null;
     }
 
-    /** Criar a forma por essa área deve ser recusado. Devolve a mensagem do erro. */
     private static String areaRecusada(TipoForma tipo, double area) {
         try {
             tipo.criarPorArea(area);
@@ -58,7 +52,6 @@ public class ModelTest {
             new Pizza(new Quadrado(20), sabores);
             fail("Pizza com sabores " + sabores + " deveria ser recusada");
         } catch (IllegalArgumentException e) {
-            // esperado
         }
     }
 
@@ -67,7 +60,6 @@ public class ModelTest {
             new Cliente(nome, sobrenome, telefone);
             fail("Cliente \"" + nome + "\", \"" + sobrenome + "\", \"" + telefone + "\" deveria ser recusado");
         } catch (IllegalArgumentException e) {
-            // esperado
         }
     }
 
@@ -76,11 +68,8 @@ public class ModelTest {
             tipo.setPrecoCm2(preco);
             fail("Preço do cm² " + preco + " deveria ser recusado");
         } catch (IllegalArgumentException e) {
-            // esperado
         }
     }
-
-    // ---------- Formas: área (polimorfismo) ----------
 
     @Test
     public void areaCalculadaPorCadaFormaPeloTipoDaSuperclasse() {
@@ -98,7 +87,6 @@ public class ModelTest {
         formaRecusada(TipoForma.QUADRADO, 41);
         formaRecusada(TipoForma.TRIANGULO, 19);
         formaRecusada(TipoForma.TRIANGULO, 61);
-        // Os próprios limites são aceitos
         new Circulo(7); new Circulo(23); new Quadrado(10); new Quadrado(40); new Triangulo(20); new Triangulo(60);
     }
 
@@ -113,14 +101,12 @@ public class ModelTest {
         areaRecusada(TipoForma.QUADRADO, Double.NaN);
     }
 
-    // ---------- Formas: criação pela área ----------
-
     @Test
     public void criarPelaAreaCalculaADimensaoDeCadaForma() {
         assertEquals(20, TipoForma.QUADRADO.criarPorArea(400).getDimensao(), DELTA);
         assertEquals(Math.sqrt(1000 / Math.PI), TipoForma.CIRCULO.criarPorArea(1000).getDimensao(), DELTA);
         Forma triangulo = TipoForma.TRIANGULO.criarPorArea(1000);
-        assertEquals(1000, triangulo.calcularArea(), DELTA);   // ida e volta bate
+        assertEquals(1000, triangulo.calcularArea(), DELTA);
     }
 
     @Test
@@ -131,19 +117,14 @@ public class ModelTest {
 
     @Test
     public void areaForaDosLimitesDaFormaInformaAFaixaValida() {
-        // 100 cm² num círculo dá raio de ~5,64 cm (mínimo 7)
         assertTrue(areaRecusada(TipoForma.CIRCULO, 100).startsWith("Para o círculo, a área deve ficar entre"));
-        // 100 cm² num triângulo dá lado de ~15,2 cm (mínimo 20)
         areaRecusada(TipoForma.TRIANGULO, 100);
-        // Os extremos da faixa informada são aceitos (triângulo: 173,21 a 1558,84 cm²)
         TipoForma.TRIANGULO.criarPorArea(173.21);
         TipoForma.TRIANGULO.criarPorArea(1558.84);
         areaRecusada(TipoForma.TRIANGULO, 1558.85);
         TipoForma.CIRCULO.criarPorArea(153.94);
         TipoForma.CIRCULO.criarPorArea(1600);
     }
-
-    // ---------- Pizza: preço ----------
 
     @Test
     public void precoComUmSaborEhAreaVezesPrecoDoTipo() {
@@ -159,9 +140,9 @@ public class ModelTest {
 
     @Test
     public void saboresInvalidosSaoRecusados() {
-        pizzaRecusada(sabores());                                                     // nenhum sabor
-        pizzaRecusada(sabores(mussarela, mussarela));                                 // sabores iguais
-        pizzaRecusada(sabores(mussarela, camarao, new Sabor(9, "Atum", simples)));    // mais de 2
+        pizzaRecusada(sabores());
+        pizzaRecusada(sabores(mussarela, mussarela));
+        pizzaRecusada(sabores(mussarela, camarao, new Sabor(9, "Atum", simples)));
     }
 
     @Test
@@ -170,13 +151,11 @@ public class ModelTest {
         assertEquals("Mussarela", new Pizza(new Quadrado(20), sabores(mussarela)).getDescricaoSabores());
     }
 
-    // ---------- Pedido ----------
-
     @Test
     public void totalDoPedidoSomaAsPizzas() {
         Pedido pedido = new Pedido(new Cliente("Ana", "Souza", "41999990000"));
-        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(mussarela)));   // 40,00
-        pedido.adicionarPizza(new Pizza(new Quadrado(10), sabores(camarao)));     // 20,00
+        pedido.adicionarPizza(new Pizza(new Quadrado(20), sabores(mussarela)));
+        pedido.adicionarPizza(new Pizza(new Quadrado(10), sabores(camarao)));
         assertEquals(60.0, pedido.getPrecoTotal(), DELTA);
         pedido.removerPizza(0);
         assertEquals(20.0, pedido.getPrecoTotal(), DELTA);
@@ -194,14 +173,12 @@ public class ModelTest {
     public void estadoDoPedidoSoAvanca() {
         Pedido pedido = new Pedido(new Cliente("Ana", "Souza", "41999990000"));
         assertTrue(pedido.podeMudarPara(EstadoPedido.A_CAMINHO));
-        assertTrue(pedido.podeMudarPara(EstadoPedido.ENTREGUE));   // pode pular etapa
-        assertFalse(pedido.podeMudarPara(EstadoPedido.ABERTO));    // já está aberto
+        assertTrue(pedido.podeMudarPara(EstadoPedido.ENTREGUE));
+        assertFalse(pedido.podeMudarPara(EstadoPedido.ABERTO));
         pedido.setEstado(EstadoPedido.ENTREGUE);
         assertFalse(pedido.podeMudarPara(EstadoPedido.A_CAMINHO));
         assertFalse(pedido.podeMudarPara(EstadoPedido.ABERTO));
     }
-
-    // ---------- Cliente: validações ----------
 
     @Test
     public void clienteValidaOsCampos() {
@@ -210,11 +187,9 @@ public class ModelTest {
         clienteRecusado("Ana3", "Souza", "41999990000");
         clienteRecusado("Ana", "Souza", "(41) 99999-0000");
         clienteRecusado("Ana", "Souza", "123");
-        clienteRecusado("Ana", "Souza", "419999900001");   // 12 dígitos
-        new Cliente("Ana Maria", "D'Ávila-Souza", "4133334444");   // válido (acento, apóstrofo e hífen)
+        clienteRecusado("Ana", "Souza", "419999900001");
+        new Cliente("Ana Maria", "D'Ávila-Souza", "4133334444");
     }
-
-    // ---------- Tipo de pizza: preço do cm² ----------
 
     @Test
     public void precoDoTipoDeveSerPositivo() {
@@ -224,11 +199,11 @@ public class ModelTest {
 
     @Test
     public void precoDoTipoTemLimitesEQuatroCasas() {
-        precoRecusado(simples, 0.00001);   // viraria 0,0000 no banco (DECIMAL(10,4))
+        precoRecusado(simples, 0.00001);
         precoRecusado(simples, 10.01);
         precoRecusado(simples, Double.NaN);
-        simples.setPrecoCm2(0.00026);      // arredonda para 4 casas
+        simples.setPrecoCm2(0.00026);
         assertEquals(0.0003, simples.getPrecoCm2(), 0.0000001);
-        simples.setPrecoCm2(10);           // o próprio limite é aceito
+        simples.setPrecoCm2(10);
     }
 }

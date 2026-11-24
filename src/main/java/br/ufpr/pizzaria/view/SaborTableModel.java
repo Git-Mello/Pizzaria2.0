@@ -7,7 +7,6 @@ import javax.swing.table.AbstractTableModel;
 
 import br.ufpr.pizzaria.model.Sabor;
 
-/** Modelo da tabela de sabores (enunciado, item 4). */
 public class SaborTableModel extends AbstractTableModel {
 
     private final String[] colunas = {"ID", "Sabor", "Tipo", "Preço do cm²"};

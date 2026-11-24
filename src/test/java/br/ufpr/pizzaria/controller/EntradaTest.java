@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-/** Testes da conversão dos números digitados nas telas (aceita vírgula, recusa texto, NaN e infinito). */
 public class EntradaTest {
 
     @Test
@@ -23,7 +22,6 @@ public class EntradaTest {
                 Entrada.lerNumero(texto, "dimensão");
                 fail("Deveria recusar: \"" + texto + "\"");
             } catch (IllegalArgumentException e) {
-                // esperado: a mensagem é mostrada ao usuário
             }
         }
     }

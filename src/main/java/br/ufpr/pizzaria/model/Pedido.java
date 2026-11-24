@@ -3,10 +3,6 @@ package br.ufpr.pizzaria.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Pedido de um cliente (tabela pedido): identificador, pizzas, estado e preço total.
- * Um cliente pode ter vários pedidos.
- */
 public class Pedido {
 
     private long id;
@@ -39,10 +35,6 @@ public class Pedido {
         return cliente;
     }
 
-    /**
-     * Devolve uma cópia da lista: para incluir ou remover pizzas é preciso usar
-     * adicionarPizza/removerPizza (que validam).
-     */
     public List<Pizza> getPizzas() {
         return new ArrayList<>(pizzas);
     }
@@ -72,20 +64,14 @@ public class Pedido {
         this.estado = estado;
     }
 
-    /**
-     * O estado só avança: Aberto → A caminho → Entregue (pode pular etapa, mas não volta).
-     * ordinal() é a posição da constante no enum EstadoPedido (ABERTO = 0, A_CAMINHO = 1, ENTREGUE = 2).
-     */
     public boolean podeMudarPara(EstadoPedido novo) {
         return novo != null && novo.ordinal() > estado.ordinal();
     }
 
-    /** Só pedidos abertos podem ter as pizzas alteradas. */
     public boolean podeSerAlterado() {
         return estado == EstadoPedido.ABERTO;
     }
 
-    /** Preço total = soma dos preços das pizzas (enunciado, itens 2.d, 2.f e 2.g). */
     public double getPrecoTotal() {
         double total = 0;
         for (Pizza pizza : pizzas) {

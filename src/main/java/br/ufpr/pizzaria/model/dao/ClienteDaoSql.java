@@ -11,7 +11,6 @@ import java.util.List;
 
 import br.ufpr.pizzaria.model.Cliente;
 
-/** Implementação MySQL do ClienteDao (padrão Singleton: uma única instância). */
 public class ClienteDaoSql implements ClienteDao {
 
     private static ClienteDaoSql dao;
@@ -73,7 +72,6 @@ public class ClienteDaoSql implements ClienteDao {
     public List<Cliente> getByFiltro(String sobrenome, String telefone) throws SQLException, IOException {
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(selectByFiltro)) {
-            // "%texto%" = contém o texto; campo vazio vira "%%", que aceita tudo
             stmt.setString(1, "%" + (sobrenome == null ? "" : sobrenome.trim()) + "%");
             stmt.setString(2, "%" + (telefone == null ? "" : telefone.trim()) + "%");
             try (ResultSet rs = stmt.executeQuery()) {
@@ -96,7 +94,6 @@ public class ClienteDaoSql implements ClienteDao {
 
     @Override
     public void delete(Cliente cliente) throws SQLException, IOException {
-        // Os pedidos (e as pizzas) do cliente saem junto por ON DELETE CASCADE no banco
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(delete)) {
             stmt.setLong(1, cliente.getId());

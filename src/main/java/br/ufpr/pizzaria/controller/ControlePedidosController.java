@@ -14,7 +14,6 @@ import br.ufpr.pizzaria.view.PedidoTableModel;
 import br.ufpr.pizzaria.view.TelaControlePedidos;
 import br.ufpr.pizzaria.view.TelaPrincipal;
 
-/** Controller da tela de pedidos de todos os clientes e seus estados (enunciado, item 5). */
 public class ControlePedidosController {
 
     private final TelaPrincipal principal;
@@ -52,7 +51,6 @@ public class ControlePedidosController {
                 recarregar();
             }
         });
-        // Ao selecionar um pedido, a caixa de estado mostra o estado atual dele
         view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -91,7 +89,6 @@ public class ControlePedidosController {
             view.mostrarErro(TratadorErros.mensagem(e));
         }
         recarregar();
-        // Mantém o mesmo pedido selecionado depois de recarregar a lista
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getPedido(i).getId() == pedido.getId()) {
                 view.selecionarLinha(i);

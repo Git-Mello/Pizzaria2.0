@@ -1,6 +1,5 @@
 package br.ufpr.pizzaria.model;
 
-/** Pizza quadrada: a dimensão é o lado (10 a 40 cm). */
 public class Quadrado extends Forma {
 
     public static final double MINIMO = 10;
@@ -10,7 +9,6 @@ public class Quadrado extends Forma {
         super(lado);
     }
 
-    /** Área do quadrado: lado². */
     @Override
     public double calcularArea() {
         return getDimensao() * getDimensao();

@@ -9,7 +9,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/** Painel auxiliar das telas: monta linhas "rótulo: campo" alinhadas. */
 class Formulario extends JPanel {
 
     private int linha = 0;
@@ -21,7 +20,6 @@ class Formulario extends JPanel {
         }
     }
 
-    /** Acrescenta uma linha com rótulo e um ou mais componentes lado a lado. */
     void adiciona(String rotulo, JComponent... componentes) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = linha++;

@@ -1,6 +1,5 @@
 package br.ufpr.pizzaria.model;
 
-/** Os três estados possíveis de um pedido (enunciado, item 5). */
 public enum EstadoPedido {
 
     ABERTO("Aberto"),

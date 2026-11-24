@@ -1,6 +1,5 @@
 package br.ufpr.pizzaria.model;
 
-/** Cliente da pizzaria (tabela cliente). O id é gerado pelo MySQL. */
 public class Cliente {
 
     private long id;
@@ -47,7 +46,6 @@ public class Cliente {
         return telefone;
     }
 
-    /** Telefone: só números, com DDD (10 ou 11 dígitos). */
     public void setTelefone(String telefone) {
         String limpo = (telefone == null) ? "" : telefone.trim();
         if (limpo.length() < 10 || limpo.length() > 11 || !soNumeros(limpo)) {
@@ -56,7 +54,6 @@ public class Cliente {
         this.telefone = limpo;
     }
 
-    /** Indica se o texto não é vazio e tem só os dígitos de 0 a 9 (usado também na busca por telefone). */
     public static boolean soNumeros(String texto) {
         if (texto == null || texto.isEmpty()) {
             return false;
@@ -70,7 +67,6 @@ public class Cliente {
         return true;
     }
 
-    /** Nome e sobrenome: obrigatórios, até 45 letras (aceita acentos, espaço, apóstrofo e hífen). */
     private static String validaTexto(String texto, String campo) {
         if (texto == null || texto.trim().isEmpty()) {
             throw new IllegalArgumentException("O " + campo + " é obrigatório.");
@@ -81,7 +77,6 @@ public class Cliente {
         }
         for (int i = 0; i < limpo.length(); i++) {
             char c = limpo.charAt(i);
-            // Character.isLetter aceita letras com acento (á, ç, ã...)
             if (!Character.isLetter(c) && c != ' ' && c != '\'' && c != '-') {
                 throw new IllegalArgumentException("O " + campo + " deve conter apenas letras.");
             }

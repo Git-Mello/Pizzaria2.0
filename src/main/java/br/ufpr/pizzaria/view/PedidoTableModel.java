@@ -7,7 +7,6 @@ import javax.swing.table.AbstractTableModel;
 
 import br.ufpr.pizzaria.model.Pedido;
 
-/** Modelo da tabela de pedidos de todos os clientes (enunciado, item 5). */
 public class PedidoTableModel extends AbstractTableModel {
 
     private final String[] colunas = {"Pedido", "Cliente", "Telefone", "Pizzas", "Total", "Situação"};

@@ -30,25 +30,16 @@ import br.ufpr.pizzaria.model.Pedido;
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.TipoForma;
 
-/**
- * Tela de realização e alteração de pedidos (enunciado, item 2).
- * Fluxo: busca o cliente pelo telefone, escolhe um pedido dele (ou "Novo pedido"),
- * monta as pizzas (forma + dimensão ou área + até 2 sabores) e salva.
- * Quem trata os eventos é o PedidoController.
- */
 public class TelaPedido extends TelaBase {
 
-    /** Item da lista de pedidos que representa "criar um pedido novo". */
     private static final String NOVO_PEDIDO = "Novo pedido";
 
-    // Cliente e pedido
     private final JTextField campoTelefone = new JTextField(11);
     private final JButton botaoBuscar = new JButton("Buscar cliente");
     private final JComboBox<Cliente> comboClientes = new JComboBox<>();
     private final JComboBox<Object> comboPedidos = new JComboBox<>();
     private final JLabel rotuloSituacao = new JLabel(" ");
 
-    // Pizza
     private final JComboBox<TipoForma> comboForma = new JComboBox<>(TipoForma.values());
     private final JRadioButton opcaoDimensao = new JRadioButton("Dimensão", true);
     private final JRadioButton opcaoArea = new JRadioButton("Área (cm²)");
@@ -60,7 +51,6 @@ public class TelaPedido extends TelaBase {
     private final JComboBox<Sabor> comboSabor2 = new JComboBox<>();
     private final JButton botaoAdicionar = new JButton("Adicionar pizza");
 
-    // Pizzas do pedido
     private final JTable tabela;
     private final JButton botaoRemover = new JButton("Remover pizza selecionada");
     private final JButton botaoSalvar = new JButton("Salvar pedido");
@@ -69,7 +59,6 @@ public class TelaPedido extends TelaBase {
     public TelaPedido(JFrame pai, PizzaTableModel modelo) {
         super(pai, "Realizar / Alterar Pedido");
 
-        // ---- Cliente e pedido ----
         JPanel buscaTelefone = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         buscaTelefone.add(campoTelefone);
         buscaTelefone.add(botaoBuscar);
@@ -79,7 +68,6 @@ public class TelaPedido extends TelaBase {
         cliente.adiciona("Pedido:", comboPedidos);
         cliente.adiciona("", rotuloSituacao);
 
-        // ---- Pizza ----
         ButtonGroup grupo = new ButtonGroup();
         grupo.add(opcaoDimensao);
         grupo.add(opcaoArea);
@@ -94,7 +82,6 @@ public class TelaPedido extends TelaBase {
         linhaArea.add(botaoCalcular);
         linhaArea.add(new JLabel("(100 a 1600 cm²)"));
 
-        // Classe anônima que herda de DefaultListCellRenderer: mostra um texto no lugar do item vazio (null)
         comboSabor2.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> lista, Object valor,
@@ -112,7 +99,6 @@ public class TelaPedido extends TelaBase {
         pizza.adiciona("2º sabor (opcional):", comboSabor2);
         pizza.adiciona("", botaoAdicionar);
 
-        // ---- Pizzas do pedido ----
         tabela = new JTable(modelo);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane rolagem = new JScrollPane(tabela);
@@ -139,7 +125,6 @@ public class TelaPedido extends TelaBase {
         painel.add(painelPizzas, BorderLayout.CENTER);
         setContentPane(painel);
 
-        // Ajustes visuais que não envolvem regra: habilitar o campo da opção escolhida
         ActionListener trocaModo = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,10 +145,8 @@ public class TelaPedido extends TelaBase {
         boolean porArea = opcaoArea.isSelected();
         campoArea.setEnabled(porArea);
         botaoCalcular.setEnabled(porArea && botaoAdicionar.isEnabled());
-        campoDimensao.setEditable(!porArea);   // no modo área, a dimensão calculada é só mostrada
+        campoDimensao.setEditable(!porArea);
     }
-
-    // ---------- Cliente e pedido ----------
 
     public String getTelefoneBusca() {
         return campoTelefone.getText();
@@ -180,7 +163,6 @@ public class TelaPedido extends TelaBase {
         return (Cliente) comboClientes.getSelectedItem();
     }
 
-    /** Preenche a lista de pedidos do cliente; o primeiro item é sempre "Novo pedido". */
     public void setPedidos(List<Pedido> pedidos) {
         comboPedidos.removeAllItems();
         comboPedidos.addItem(NOVO_PEDIDO);
@@ -189,7 +171,6 @@ public class TelaPedido extends TelaBase {
         }
     }
 
-    /** O pedido escolhido, ou null se for "Novo pedido". */
     public Pedido getPedidoSelecionado() {
         Object item = comboPedidos.getSelectedItem();
         return (item instanceof Pedido) ? (Pedido) item : null;
@@ -209,7 +190,6 @@ public class TelaPedido extends TelaBase {
         return comboPedidos.getSelectedItem() != null;
     }
 
-    /** Habilita ou não a montagem de pizzas, mostrando a situação do pedido. */
     public void setPodeEditar(boolean pode, String situacao) {
         rotuloSituacao.setText(situacao);
         for (JComponent c : new JComponent[] {comboForma, opcaoDimensao, opcaoArea,
@@ -220,12 +200,10 @@ public class TelaPedido extends TelaBase {
         campoArea.setEnabled(pode && opcaoArea.isSelected());
     }
 
-    // ---------- Pizza ----------
-
     public void setSabores(List<Sabor> sabores) {
         comboSabor1.removeAllItems();
         comboSabor2.removeAllItems();
-        comboSabor2.addItem(null);   // segundo sabor é opcional
+        comboSabor2.addItem(null);
         for (Sabor s : sabores) {
             comboSabor1.addItem(s);
             comboSabor2.addItem(s);
@@ -270,8 +248,6 @@ public class TelaPedido extends TelaBase {
         comboSabor2.setSelectedIndex(0);
     }
 
-    // ---------- Pizzas do pedido ----------
-
     public int getLinhaSelecionada() {
         return tabela.getSelectedRow();
     }
@@ -279,8 +255,6 @@ public class TelaPedido extends TelaBase {
     public void setTotal(double total) {
         rotuloTotal.setText("Total do pedido: " + Formato.moeda(total) + "  ");
     }
-
-    // ---------- Componentes em que o Controller registra as ações ----------
 
     public JButton getBotaoBuscar() {
         return botaoBuscar;

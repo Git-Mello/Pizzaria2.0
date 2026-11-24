@@ -16,10 +16,6 @@ import br.ufpr.pizzaria.model.Pizza;
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.TipoForma;
 
-/**
- * Implementação MySQL do PedidoDao (padrão Singleton).
- * Um pedido ocupa três tabelas: pedido, pizza e pizza_sabor.
- */
 public class PedidoDaoSql implements PedidoDao {
 
     private static PedidoDaoSql dao;
@@ -27,7 +23,6 @@ public class PedidoDaoSql implements PedidoDao {
     private final String insert = "INSERT INTO pedido (id_cliente, estado, preco_total) VALUES (?, ?, ?)";
     private final String insertPizza = "INSERT INTO pizza (id_pedido, forma, dimensao, area, preco) VALUES (?, ?, ?, ?, ?)";
     private final String insertPizzaSabor = "INSERT INTO pizza_sabor (id_pizza, id_sabor) VALUES (?, ?)";
-    // Pedido com os dados do cliente (INNER JOIN)
     private final String selectBase = "SELECT p.id, p.estado, c.id AS id_cliente, c.nome, c.sobrenome, c.telefone"
             + " FROM pedido p INNER JOIN cliente c ON c.id = p.id_cliente";
     private final String selectAll = selectBase + " ORDER BY p.id DESC";
@@ -39,7 +34,7 @@ public class PedidoDaoSql implements PedidoDao {
             + " INNER JOIN tipo_pizza t ON t.id = s.id_tipo WHERE ps.id_pizza = ? ORDER BY s.nome";
     private final String update = "UPDATE pedido SET estado = ?, preco_total = ? WHERE id = ?";
     private final String updateEstado = "UPDATE pedido SET estado = ? WHERE id = ?";
-    private final String deletePizzas = "DELETE FROM pizza WHERE id_pedido = ?";   // pizza_sabor sai em cascata
+    private final String deletePizzas = "DELETE FROM pizza WHERE id_pedido = ?";
     private final String delete = "DELETE FROM pedido WHERE id = ?";
 
     private PedidoDaoSql() {
@@ -55,7 +50,7 @@ public class PedidoDaoSql implements PedidoDao {
     @Override
     public void add(Pedido pedido) throws SQLException, IOException {
         try (Connection con = ConnectionFactory.getConnection()) {
-            con.setAutoCommit(false);   // tudo ou nada: pedido + pizzas + sabores
+            con.setAutoCommit(false);
             try (PreparedStatement stmt = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setLong(1, pedido.getCliente().getId());
                 stmt.setString(2, pedido.getEstado().name());
@@ -69,7 +64,7 @@ public class PedidoDaoSql implements PedidoDao {
                 con.commit();
             } catch (SQLException ex) {
                 con.rollback();
-                pedido.setId(0);   // o pedido não foi gravado: continua sendo um pedido novo
+                pedido.setId(0);
                 throw ex;
             }
         }
@@ -85,7 +80,6 @@ public class PedidoDaoSql implements PedidoDao {
                 stmt.setDouble(2, pedido.getPrecoTotal());
                 stmt.setLong(3, pedido.getId());
                 stmt.executeUpdate();
-                // As pizzas são regravadas: apaga as antigas e grava a lista atual
                 stmtApaga.setLong(1, pedido.getId());
                 stmtApaga.executeUpdate();
                 gravarPizzas(con, pedido);
@@ -97,7 +91,6 @@ public class PedidoDaoSql implements PedidoDao {
         }
     }
 
-    /** Grava cada pizza do pedido e, para cada pizza, os seus sabores. */
     private void gravarPizzas(Connection con, Pedido pedido) throws SQLException {
         try (PreparedStatement stmtPizza = con.prepareStatement(insertPizza, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement stmtSabor = con.prepareStatement(insertPizzaSabor)) {
@@ -167,7 +160,6 @@ public class PedidoDaoSql implements PedidoDao {
         }
     }
 
-    /** Executa o SELECT de pedidos e monta cada Pedido com o Cliente e as Pizzas. */
     private List<Pedido> lerPedidos(Connection con, PreparedStatement stmt) throws SQLException {
         List<Pedido> pedidos = new ArrayList<>();
         try (ResultSet rs = stmt.executeQuery()) {
@@ -183,7 +175,6 @@ public class PedidoDaoSql implements PedidoDao {
         return pedidos;
     }
 
-    /** Lê as pizzas do pedido. A coluna forma diz qual subclasse de Forma criar. */
     private void carregarPizzas(Connection con, Pedido pedido) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(selectPizzas)) {
             stmt.setLong(1, pedido.getId());

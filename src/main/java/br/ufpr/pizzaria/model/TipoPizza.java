@@ -1,12 +1,7 @@
 package br.ufpr.pizzaria.model;
 
-/**
- * Tipo da pizza (tabela tipo_pizza): Simples, Especial ou Premium,
- * cada um com o seu preço por centímetro quadrado.
- */
 public class TipoPizza {
 
-    // Limites do preço do cm² (R$). O mínimo é a menor fração que o banco guarda (4 casas).
     public static final double PRECO_MINIMO = 0.0001;
     public static final double PRECO_MAXIMO = 10;
 
@@ -32,11 +27,6 @@ public class TipoPizza {
         return precoCm2;
     }
 
-    /**
-     * O banco guarda o preço com 4 casas decimais (DECIMAL(10,4)); por isso o valor é arredondado
-     * para 4 casas antes de validar. Assim, um valor como 0,00001 (que viraria 0,0000 no banco)
-     * é recusado aqui, com mensagem, em vez de gravar zero.
-     */
     public void setPrecoCm2(double precoCm2) {
         double arredondado = Math.round(precoCm2 * 10000) / 10000.0;
         if (Double.isNaN(precoCm2) || arredondado < PRECO_MINIMO || arredondado > PRECO_MAXIMO) {

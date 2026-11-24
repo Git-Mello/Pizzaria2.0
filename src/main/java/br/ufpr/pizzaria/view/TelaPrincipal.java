@@ -12,10 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-/**
- * Tela principal (menu). Não sabe o que os botões fazem:
- * cada Controller registra a sua ação no botão correspondente.
- */
 public class TelaPrincipal extends JFrame {
 
     private final JButton botaoClientes = new JButton("Clientes");
@@ -31,7 +27,6 @@ public class TelaPrincipal extends JFrame {
         JLabel titulo = new JLabel("Pizzaria 2.0", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 22f));
     
-
         JPanel cabecalho = new JPanel(new GridLayout(2, 1));
         cabecalho.add(titulo);
 

@@ -16,10 +16,6 @@ import javax.swing.ListSelectionModel;
 
 import br.ufpr.pizzaria.model.EstadoPedido;
 
-/**
- * Tela com os pedidos de todos os clientes e os seus estados (enunciado, item 5).
- * Permite alterar o estado do pedido selecionado. Quem trata os botões é o ControlePedidosController.
- */
 public class TelaControlePedidos extends TelaBase {
 
     private final JTable tabela;
@@ -53,12 +49,10 @@ public class TelaControlePedidos extends TelaBase {
         setLocationRelativeTo(pai);
     }
 
-    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
         return tabela.getSelectedRow();
     }
 
-    /** Seleciona a linha informada da tabela. */
     public void selecionarLinha(int linha) {
         tabela.setRowSelectionInterval(linha, linha);
     }

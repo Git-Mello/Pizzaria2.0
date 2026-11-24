@@ -14,7 +14,6 @@ import br.ufpr.pizzaria.view.SaborTableModel;
 import br.ufpr.pizzaria.view.TelaPrincipal;
 import br.ufpr.pizzaria.view.TelaSabores;
 
-/** Controller dos sabores (enunciado, item 4): cadastra e relaciona cada sabor a um tipo. */
 public class SaborController {
 
     private static final String NOME_REPETIDO = "Já existe um sabor com este nome.";
@@ -69,7 +68,6 @@ public class SaborController {
                 view.limparCampos();
             }
         });
-        // Ao clicar num sabor da lista, os dados vão para os campos
         view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -109,7 +107,6 @@ public class SaborController {
         recarregar();
     }
 
-    /** Sabor que já está em alguma pizza pedida não pode ser excluído. */
     private void excluir() {
         Sabor sabor = saborSelecionado();
         if (sabor == null) {

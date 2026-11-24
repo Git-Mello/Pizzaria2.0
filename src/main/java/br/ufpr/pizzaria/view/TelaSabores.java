@@ -19,10 +19,6 @@ import javax.swing.ListSelectionModel;
 import br.ufpr.pizzaria.model.Sabor;
 import br.ufpr.pizzaria.model.TipoPizza;
 
-/**
- * Tela de sabores (enunciado, item 4): cadastra os sabores e relaciona cada um a um tipo.
- * Quem trata os botões é o SaborController.
- */
 public class TelaSabores extends TelaBase {
 
     private final JTextField campoNome = new JTextField(20);
@@ -93,7 +89,6 @@ public class TelaSabores extends TelaBase {
         campoNome.requestFocusInWindow();
     }
 
-    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
         return tabela.getSelectedRow();
     }

@@ -1,6 +1,5 @@
 package br.ufpr.pizzaria.model;
 
-/** Sabor de pizza (tabela sabor), relacionado a um tipo (Simples, Especial ou Premium). */
 public class Sabor {
 
     private long id;

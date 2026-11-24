@@ -14,10 +14,6 @@ import br.ufpr.pizzaria.view.ClienteTableModel;
 import br.ufpr.pizzaria.view.TelaClientes;
 import br.ufpr.pizzaria.view.TelaPrincipal;
 
-/**
- * Controller dos clientes (enunciado, item 1). Como no exemplo Contato MVC:
- * guarda a view, o model (TableModel) e o dao, e registra as ações nos botões da tela.
- */
 public class ClienteController {
 
     private static final String TELEFONE_REPETIDO = "Já existe um cliente cadastrado com este telefone.";
@@ -30,7 +26,6 @@ public class ClienteController {
 
     public ClienteController(TelaPrincipal principal) {
         this.principal = principal;
-        // Classe anônima: implementa ActionListener ali mesmo, só para este botão
         principal.getBotaoClientes().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,7 +78,6 @@ public class ClienteController {
                 mostrarTodos();
             }
         });
-        // Ao clicar num cliente da lista, os dados vão para os campos
         view.getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -121,10 +115,9 @@ public class ClienteController {
         } catch (Exception e) {
             view.mostrarErro(TratadorErros.mensagem(e, TELEFONE_REPETIDO));
         }
-        recarregar();   // em caso de erro, desfaz o que foi alterado só na memória
+        recarregar();
     }
 
-    /** Exclui o cliente e os pedidos dele (enunciado, item 1.c), após confirmação. */
     private void excluir() {
         Cliente cliente = clienteSelecionado();
         if (cliente == null) {
@@ -148,7 +141,6 @@ public class ClienteController {
         }
     }
 
-    /** Filtro por sobrenome (ou parte) e/ou telefone (enunciado, item 1.d). */
     private void filtrar() {
         try {
             model.setClientes(dao.getByFiltro(view.getFiltroSobrenome(), view.getFiltroTelefone()));
@@ -165,7 +157,6 @@ public class ClienteController {
         recarregar();
     }
 
-    /** Recarrega a lista mantendo o filtro que estiver digitado. */
     private void recarregar() {
         try {
             model.setClientes(dao.getByFiltro(view.getFiltroSobrenome(), view.getFiltroTelefone()));

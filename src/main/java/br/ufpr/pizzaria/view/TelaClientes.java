@@ -16,10 +16,6 @@ import javax.swing.ListSelectionModel;
 
 import br.ufpr.pizzaria.model.Cliente;
 
-/**
- * Tela de clientes (enunciado, item 1): incluir, listar, atualizar, excluir e filtrar.
- * Quem trata os botões é o ClienteController.
- */
 public class TelaClientes extends TelaBase {
 
     private final JTextField campoNome = new JTextField(20);
@@ -40,7 +36,6 @@ public class TelaClientes extends TelaBase {
     public TelaClientes(JFrame pai, ClienteTableModel modelo) {
         super(pai, "Clientes");
 
-        // Dados do cliente
         Formulario dados = new Formulario("Dados do cliente");
         dados.adiciona("Nome:", campoNome);
         dados.adiciona("Sobrenome:", campoSobrenome);
@@ -54,7 +49,6 @@ public class TelaClientes extends TelaBase {
         painelDados.add(dados, BorderLayout.CENTER);
         painelDados.add(botoes, BorderLayout.SOUTH);
 
-        // Filtro (enunciado, item 1.d)
         JPanel filtro = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filtro.setBorder(BorderFactory.createTitledBorder("Filtrar clientes"));
         filtro.add(new JLabel("Sobrenome:"));
@@ -64,7 +58,6 @@ public class TelaClientes extends TelaBase {
         filtro.add(botaoFiltrar);
         filtro.add(botaoMostrarTodos);
 
-        // Lista (enunciado, item 1.a)
         tabela = new JTable(modelo);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane rolagem = new JScrollPane(tabela);
@@ -84,8 +77,6 @@ public class TelaClientes extends TelaBase {
         pack();
         setLocationRelativeTo(pai);
     }
-
-    // ---------- Campos (lidos e preenchidos pelo Controller) ----------
 
     public String getNome() {
         return campoNome.getText();
@@ -126,7 +117,6 @@ public class TelaClientes extends TelaBase {
         campoNome.requestFocusInWindow();
     }
 
-    /** Linha selecionada na tabela, ou -1 se nenhuma. */
     public int getLinhaSelecionada() {
         return tabela.getSelectedRow();
     }
@@ -134,8 +124,6 @@ public class TelaClientes extends TelaBase {
     public JTable getTabela() {
         return tabela;
     }
-
-    // ---------- Botões (o Controller registra as ações) ----------
 
     public JButton getBotaoIncluir() {
         return botaoIncluir;

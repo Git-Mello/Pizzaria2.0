@@ -1,6 +1,5 @@
 package br.ufpr.pizzaria.model;
 
-/** Pizza triangular (triângulo equilátero): a dimensão é o lado (20 a 60 cm). */
 public class Triangulo extends Forma {
 
     public static final double MINIMO = 20;
@@ -10,7 +9,6 @@ public class Triangulo extends Forma {
         super(lado);
     }
 
-    /** Área do triângulo equilátero: (raiz(3) / 4) x lado². */
     @Override
     public double calcularArea() {
         return (Math.sqrt(3) / 4) * getDimensao() * getDimensao();

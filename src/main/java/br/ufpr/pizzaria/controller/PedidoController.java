@@ -24,10 +24,6 @@ import br.ufpr.pizzaria.view.PizzaTableModel;
 import br.ufpr.pizzaria.view.TelaPedido;
 import br.ufpr.pizzaria.view.TelaPrincipal;
 
-/**
- * Controller da tela de pedido (enunciado, item 2).
- * Guarda o pedido que está sendo montado (pedidoAtual) e só grava no banco ao clicar em "Salvar pedido".
- */
 public class PedidoController {
 
     private final TelaPrincipal principal;
@@ -37,11 +33,11 @@ public class PedidoController {
     private final SaborDao saborDao = DaoFactory.getSaborDao();
 
     private TelaPedido view;
-    private Pedido pedidoAtual;         // pedido em edição (novo ou existente)
-    private boolean alterado;           // há mudanças ainda não salvas?
-    private boolean ignorarEventos;     // evita reagir enquanto o próprio Controller preenche as listas
-    private int indicePedidoAnterior;   // para voltar a seleção se o usuário desistir de trocar de pedido
-    private int indiceClienteAnterior;  // idem, ao trocar de cliente
+    private Pedido pedidoAtual;
+    private boolean alterado;
+    private boolean ignorarEventos;
+    private int indicePedidoAnterior;
+    private int indiceClienteAnterior;
 
     public PedidoController(TelaPrincipal principal) {
         this.principal = principal;
@@ -126,7 +122,6 @@ public class PedidoController {
             }
         });
 
-        // Ao fechar com mudanças não salvas, pergunta antes
         view.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         view.addWindowListener(new WindowAdapter() {
             @Override
@@ -139,9 +134,6 @@ public class PedidoController {
         view.setVisible(true);
     }
 
-    // ---------- 1. Cliente e pedido ----------
-
-    /** Busca o cliente pelo telefone (enunciado, item 2.b). */
     private void buscarCliente() {
         String telefone = view.getTelefoneBusca().trim();
         if (!Cliente.soNumeros(telefone)) {
@@ -160,7 +152,7 @@ public class PedidoController {
             ignorarEventos = true;
             view.setClientes(clientes);
             ignorarEventos = false;
-            alterado = false;   // já confirmado acima
+            alterado = false;
             clienteEscolhido();
         } catch (Exception e) {
             ignorarEventos = false;
@@ -168,10 +160,6 @@ public class PedidoController {
         }
     }
 
-    /**
-     * Ao escolher o cliente, lista os pedidos dele. Se ele já tiver pedido, o mais recente
-     * é aberto para atualização; se não, começa um pedido novo (enunciado, item 2.b).
-     */
     private void clienteEscolhido() {
         Cliente cliente = view.getClienteSelecionado();
         if (cliente == null) {
@@ -189,7 +177,7 @@ public class PedidoController {
             ignorarEventos = true;
             view.setPedidos(pedidos);
             if (!pedidos.isEmpty()) {
-                view.getComboPedidos().setSelectedIndex(1);   // pedido mais recente
+                view.getComboPedidos().setSelectedIndex(1);
             }
             ignorarEventos = false;
             alterado = false;
@@ -216,8 +204,6 @@ public class PedidoController {
             pedidoAtual = new Pedido(view.getClienteSelecionado());
             view.setPodeEditar(true, "Novo pedido: monte as pizzas e clique em Salvar pedido.");
         } else {
-            // Relê o pedido do banco: assim, alterações descartadas (pizzas adicionadas e não salvas)
-            // não continuam no objeto que está na lista "Pedido".
             try {
                 pedidoAtual = dao.getById(escolhido.getId());
             } catch (Exception e) {
@@ -243,13 +229,10 @@ public class PedidoController {
         atualizarPizzas();
     }
 
-    // ---------- 2. Montar a pizza ----------
-
     private void atualizarLimites() {
         view.setLimites("(" + view.getForma().getDescricaoLimites() + ")");
     }
 
-    /** Calcula e mostra o raio/lado a partir da área informada (enunciado, item 2.c.iv). */
     private void calcularDimensao() {
         try {
             Forma forma = formaPelaArea();
@@ -282,7 +265,7 @@ public class PedidoController {
             if (view.getSabor2() != null) {
                 sabores.add(view.getSabor2());
             }
-            Pizza pizza = new Pizza(forma, sabores);   // valida sabores e calcula o preço
+            Pizza pizza = new Pizza(forma, sabores);
             pedidoAtual.adicionarPizza(pizza);
             alterado = true;
             atualizarPizzas();
@@ -302,13 +285,10 @@ public class PedidoController {
         }
     }
 
-    /** Atualiza a tabela de pizzas e o preço total (enunciado, itens 2.d e 2.g). */
     private void atualizarPizzas() {
         model.setPizzas(pedidoAtual == null ? new ArrayList<>() : pedidoAtual.getPizzas());
         view.setTotal(pedidoAtual == null ? 0 : pedidoAtual.getPrecoTotal());
     }
-
-    // ---------- 3. Salvar ----------
 
     private void salvar() {
         if (pedidoAtual == null) {
@@ -324,13 +304,12 @@ public class PedidoController {
             if (novo) {
                 dao.add(pedidoAtual);
             } else {
-                dao.update(pedidoAtual);   // enunciado, item 2.i: alterar o pedido
+                dao.update(pedidoAtual);
             }
             alterado = false;
             long id = pedidoAtual.getId();
             view.mostrarMensagem("Pedido " + (novo ? " criado" : " alterado") + " para "
                     + pedidoAtual.getCliente().getNome() + ".\nTotal: " + Formato.moeda(pedidoAtual.getPrecoTotal()));
-            // Recarrega a lista de pedidos do cliente e deixa o pedido salvo selecionado
             ignorarEventos = true;
             view.setPedidos(dao.getByCliente(pedidoAtual.getCliente()));
             view.selecionarPedido(id);
@@ -342,7 +321,6 @@ public class PedidoController {
         }
     }
 
-    /** Se houver mudanças não salvas, pergunta se pode descartá-las. */
     private boolean podeDescartar() {
         return !alterado || view.confirmar("As alterações do pedido atual não foram salvas. Descartar?");
     }
