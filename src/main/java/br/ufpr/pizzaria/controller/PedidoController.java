@@ -328,7 +328,7 @@ public class PedidoController {
             }
             alterado = false;
             long id = pedidoAtual.getId();
-            view.mostrarMensagem("Pedido " + id + (novo ? " criado" : " alterado") + " para "
+            view.mostrarMensagem("Pedido " + (novo ? " criado" : " alterado") + " para "
                     + pedidoAtual.getCliente().getNome() + ".\nTotal: " + Formato.moeda(pedidoAtual.getPrecoTotal()));
             // Recarrega a lista de pedidos do cliente e deixa o pedido salvo selecionado
             ignorarEventos = true;

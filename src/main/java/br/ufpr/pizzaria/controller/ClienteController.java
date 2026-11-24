@@ -101,7 +101,7 @@ public class ClienteController {
             dao.add(cliente);
             recarregar();
             view.limparCampos();
-            view.mostrarMensagem("Cliente " + cliente.getNome() + " incluído (código " + cliente.getId() + ").");
+            view.mostrarMensagem("Cliente " + cliente.getNome() + " incluído.");
         } catch (Exception e) {
             view.mostrarErro(TratadorErros.mensagem(e, TELEFONE_REPETIDO));
         }
