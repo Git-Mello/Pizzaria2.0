@@ -44,7 +44,7 @@ public class TelaControlePedidos extends TelaBase {
 
         JPanel painel = new JPanel(new BorderLayout(5, 5));
         painel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        painel.add(new JLabel("Pedidos de todos os clientes (mais recentes primeiro)"), BorderLayout.NORTH);
+        painel.add(new JLabel("Pedidos de todos os clientes"), BorderLayout.NORTH);
         painel.add(rolagem, BorderLayout.CENTER);
         painel.add(acoes, BorderLayout.SOUTH);
         setContentPane(painel);

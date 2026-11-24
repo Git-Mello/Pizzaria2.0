@@ -73,7 +73,7 @@ public class TelaPedido extends TelaBase {
         JPanel buscaTelefone = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         buscaTelefone.add(campoTelefone);
         buscaTelefone.add(botaoBuscar);
-        Formulario cliente = new Formulario("1. Cliente e pedido");
+        Formulario cliente = new Formulario("Cliente e pedido");
         cliente.adiciona("Telefone do cliente:", buscaTelefone);
         cliente.adiciona("Cliente:", comboClientes);
         cliente.adiciona("Pedido:", comboPedidos);
@@ -104,7 +104,7 @@ public class TelaPedido extends TelaBase {
             }
         });
 
-        Formulario pizza = new Formulario("2. Montar a pizza");
+        Formulario pizza = new Formulario("Montar a pizza");
         pizza.adiciona("Forma:", comboForma);
         pizza.adiciona("Tamanho por:", linhaDimensao);
         pizza.adiciona("", linhaArea);
@@ -125,7 +125,7 @@ public class TelaPedido extends TelaBase {
         rodape.add(botoes, BorderLayout.WEST);
         rodape.add(rotuloTotal, BorderLayout.EAST);
         JPanel painelPizzas = new JPanel(new BorderLayout());
-        painelPizzas.setBorder(BorderFactory.createTitledBorder("3. Pizzas do pedido"));
+        painelPizzas.setBorder(BorderFactory.createTitledBorder("Pizzas do pedido"));
         painelPizzas.add(rolagem, BorderLayout.CENTER);
         painelPizzas.add(rodape, BorderLayout.SOUTH);
 

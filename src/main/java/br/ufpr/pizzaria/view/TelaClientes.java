@@ -44,7 +44,7 @@ public class TelaClientes extends TelaBase {
         Formulario dados = new Formulario("Dados do cliente");
         dados.adiciona("Nome:", campoNome);
         dados.adiciona("Sobrenome:", campoSobrenome);
-        dados.adiciona("Telefone (só números, com DDD):", campoTelefone);
+        dados.adiciona("Telefone:", campoTelefone);
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
         botoes.add(botaoIncluir);
         botoes.add(botaoAtualizar);
