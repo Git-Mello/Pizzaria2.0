@@ -58,15 +58,3 @@ src/main/java/br/ufpr/pizzaria/
 ├── controller/            um Controller por tela: guarda a view, o TableModel e o DAO e trata os eventos
 └── view/                  telas Swing e TableModels (AbstractTableModel)
 ```
-
-## Diagramas de classes
-
-**Model e DAO**
-
-![Diagrama de classes: Model e DAO](docs/diagrama-model-dao.png)
-
-**MVC (Controllers, telas e TableModels)**
-
-![Diagrama de classes: MVC](docs/diagrama-mvc.png)
-
-As fontes dos diagramas (Mermaid) estão em [`docs/`](docs).
